@@ -28,7 +28,7 @@ function LoginPage() {
       const response = await axios.post("/api/users/login", user);
       console.log("Login success", response.data);
       toast.success("Login success");
-      router.push("/");
+      router.replace("/"); // Use replace instead of push
     } catch (error: any) {
       console.log(
         "Login failed",
@@ -98,7 +98,7 @@ function LoginPage() {
           type="submit"
           disabled={buttonDisabled}
         >
-          {buttonDisabled ? "No Login" : "Login"}
+          {loading ? "Loading..." : "Login"}
           <BottomGradient />
         </button>
 
