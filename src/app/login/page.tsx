@@ -28,7 +28,8 @@ function LoginPage() {
       const response = await axios.post("/api/users/login", user);
       console.log("Login success", response.data);
       toast.success("Login success");
-      router.replace("/"); // Use replace instead of push
+      // Reload the page immediately after login
+      window.location.reload();
     } catch (error: any) {
       console.log(
         "Login failed",
