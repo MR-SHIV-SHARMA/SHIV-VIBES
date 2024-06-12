@@ -17,24 +17,11 @@ function LoginPage() {
   });
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isVerified, setIsVerified] = useState(false); // State to track email verification status
-
-  useEffect(() => {
-    const checkEmailVerification = async () => {
-      try {
-        const response = await axios.get("/api/users/emailVerificationStatus");
-        setIsVerified(response.data.verified);
-        console.log("Email verification status:", response.data.verified);
-      } catch (error) {
-        console.error("Error fetching email verification status:", error);
-      }
-    };
-
-    checkEmailVerification();
-  }, []);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const onLogin = async (event: any) => {
     event.preventDefault();
+    setErrorMessage(null); // Clear any existing error message
 
     try {
       setLoading(true);
@@ -43,11 +30,16 @@ function LoginPage() {
       toast.success("Login success");
       router.push("/");
     } catch (error: any) {
-      console.log("Login failed", error.response?.data?.error || "An error occurred");
+      console.log(
+        "Login failed",
+        error.response?.data?.error || "An error occurred"
+      );
       if (error.response?.data?.error === "Email not verified") {
         toast.error("Email not verified. Please verify your email.");
+        setErrorMessage("Email not verified. Please verify your email.");
       } else {
         toast.error(error.response?.data?.error || "An error occurred");
+        setErrorMessage(error.response?.data?.error || "An error occurred");
       }
     } finally {
       setLoading(false);
@@ -63,16 +55,18 @@ function LoginPage() {
   }, [user]);
 
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black mt-36 
-    flex flex-col items-center justify-center min-h-fit py-2">
+    <div
+      className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-gray-800 mt-36 
+    flex flex-col items-center justify-center min-h-fit py-2"
+    >
       <h2 className="font-bold text-xl mt-4 text-neutral-800 dark:text-neutral-200">
         Welcome to SHIV-WEB
       </h2>
 
       <h1>{loading ? "Processing" : "Login"}</h1>
 
-      {!isVerified && (
-        <p className="text-red-500 text-sm mb-2">Please verify your email address before logging in.</p>
+      {errorMessage && (
+        <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
       )}
 
       <form className="my-8" onSubmit={onLogin}>
@@ -84,6 +78,7 @@ function LoginPage() {
             onChange={(e) => setUser({ ...user, email: e.target.value })}
             placeholder="Shiv@gmail.com"
             type="email"
+            className="dark:bg-gray-700 dark:text-white"
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
@@ -94,20 +89,24 @@ function LoginPage() {
             onChange={(e) => setUser({ ...user, password: e.target.value })}
             placeholder="••••••••"
             type="password"
+            className="dark:bg-gray-700 dark:text-white"
           />
         </LabelInputContainer>
 
         <button
-          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+          className="bg-gradient-to-br relative group/btn from-black dark:from-gray-700 dark:to-gray-600 to-neutral-600 block dark:bg-gray-700 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--gray-800)_inset,0px_-1px_0px_0px_var(--gray-800)_inset]"
           type="submit"
           disabled={buttonDisabled}
         >
           {buttonDisabled ? "No Login" : "Login"}
           <BottomGradient />
         </button>
-        <Link className="text-white" href="/signup">
+
+        <Link className="text-gray-900 dark:text-white" href="/signup">
           <h1 className="mt-2">
-            Create a <span className="text-gray-500">SHIV-WEB</span> Account
+            Create a{" "}
+            <span className="text-gray-500 dark:text-gray-400">SHIV-WEB</span>{" "}
+            Account
           </h1>
         </Link>
       </form>

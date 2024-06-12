@@ -33,7 +33,14 @@ function SignupFormDemo() {
       router.push("/Account_verification_email");
     } catch (error: any) {
       console.log("Signup failed", error.message);
-      toast.error(error.message, { duration: 15000 });
+      if (
+        error.response &&
+        error.response.data.error === "user already exists"
+      ) {
+        toast.error("User already exists", { duration: 15000 });
+      } else {
+        toast.error(error.message, { duration: 15000 });
+      }
     } finally {
       setLoading(false);
     }
