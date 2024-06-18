@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 // ./components/EmailVerification.js
+import Link from "next/link";
 
 const EmailVerification = () => {
   return (
@@ -19,6 +20,9 @@ const EmailVerification = () => {
           We have sent an email to youraddress@gmail.com. Please click the link
           in that email to verify your account.
         </p>
+        <button className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">
+          <Link href="/login">Login</Link>
+        </button>
       </div>
     </div>
   );

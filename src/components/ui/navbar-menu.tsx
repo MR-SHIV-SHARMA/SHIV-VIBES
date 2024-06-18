@@ -1,8 +1,9 @@
 "use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
+import clsx from "clsx"; // Import clsx
 
 const transition = {
   type: "spring",
@@ -17,15 +18,33 @@ export const MenuItem = ({
   setActive,
   active,
   item,
+  icon,
   children,
+  showOnlyIconOnSmallScreen,
 }: {
   setActive: (item: string) => void;
   active: string | null;
   item: string;
+  icon?: React.ReactNode;
   children?: React.ReactNode;
+  showOnlyIconOnSmallScreen?: boolean;
 }) => {
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative ">
+    <div
+      onMouseEnter={() => setActive(item)}
+      className="relative flex items-center space-x-2"
+    >
+      {icon &&
+        (showOnlyIconOnSmallScreen ? (
+          <motion.span
+            whileHover={{ scale: 1.1 }}
+            className="cursor-pointer text-black dark:text-white"
+          >
+            {icon}
+          </motion.span>
+        ) : (
+          <span>{icon}</span>
+        ))}
       <motion.p
         transition={{ duration: 0.3 }}
         className="cursor-pointer text-black hover:opacity-[0.9] dark:text-white"
@@ -42,13 +61,10 @@ export const MenuItem = ({
             <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
               <motion.div
                 transition={transition}
-                layoutId="active" // layoutId ensures smooth animation
+                layoutId="active"
                 className="bg-white dark:bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-xl"
               >
-                <motion.div
-                  layout // layout ensures smooth animation
-                  className="w-max h-full p-4"
-                >
+                <motion.div layout className="w-max h-full p-4">
                   {children}
                 </motion.div>
               </motion.div>
@@ -63,49 +79,27 @@ export const MenuItem = ({
 export const Menu = ({
   setActive,
   children,
+  isDarkMode,
 }: {
   setActive: (item: string | null) => void;
   children: React.ReactNode;
+  isDarkMode: boolean;
 }) => {
   return (
     <nav
-      onMouseLeave={() => setActive(null)} // resets the state
-      className="relative rounded-full boder border-transparent dark:bg-black dark:border-white/[0.2] bg-white shadow-input flex justify-center space-x-4 px-8 py-6 "
+      onMouseLeave={() => setActive(null)}
+      className={clsx(
+        "relative rounded-full border border-transparent shadow-input flex justify-center space-x-4 px-4 py-4",
+        {
+          "bg-white text-black dark:bg-black dark:border-white/[0.2]":
+            isDarkMode,
+          "bg-white text-white dark:bg-gray-800 dark:border-black/[0.2]":
+            !isDarkMode,
+        }
+      )}
     >
       {children}
     </nav>
-  );
-};
-
-export const ProductItem = ({
-  title,
-  description,
-  href,
-  src,
-}: {
-  title: string;
-  description: string;
-  href: string;
-  src: string;
-}) => {
-  return (
-    <Link href={href} className="flex space-x-2">
-      <Image
-        src={src}
-        width={140}
-        height={70}
-        alt={title}
-        className="flex-shrink-0 rounded-md shadow-2xl"
-      />
-      <div>
-        <h4 className="text-xl font-bold mb-1 text-black dark:text-white">
-          {title}
-        </h4>
-        <p className="text-neutral-700 text-sm max-w-[10rem] dark:text-neutral-300">
-          {description}
-        </p>
-      </div>
-    </Link>
   );
 };
 
@@ -113,7 +107,7 @@ export const HoveredLink = ({ children, ...rest }: any) => {
   return (
     <Link
       {...rest}
-      className="text-neutral-700 dark:text-neutral-200 hover:text-black "
+      className="text-neutral-700 dark:text-neutral-200 hover:text-black"
     >
       {children}
     </Link>
