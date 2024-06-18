@@ -101,7 +101,7 @@
       "image": "https://images.pexels.com/photos/5288861/pexels-photo-5288861.jpeg?auto=compress&cs=tinysrgb&w=600"
     },
     {
-      "id": 10,
+      "id": 11,
       "title": "blues licks Techniques",
       "slug": "blues-licks-techniques",
       "description": "Bending involves pushing or pulling a string up or down to change its pitch. This technique mimics the human voice and adds a soulful, expressive quality to the notes.",
@@ -109,6 +109,16 @@
       "instructor": "Ejhon Mogi",
       "isFeatured": true,
       "image": "https://images.pexels.com/photos/1125748/pexels-photo-1125748.jpeg?auto=compress&cs=tinysrgb&w=600"
+    },
+    {
+      "id": 12,
+      "title": "Blues Licks Mastery",
+      "slug": "blues-licks-techniques",
+      "description": "When a string is bent, its pitch changes, mimicking the inflections of the human voice and adding a richly expressive quality to the sound.",
+      "price": 200.99,
+      "instructor": "Ejhon Mogi",
+      "isFeatured": true,
+      "image": "https://images.pexels.com/photos/4471308/pexels-photo-4471308.jpeg?auto=compress&cs=tinysrgb&w=600"
     }
   ]
 }

@@ -5,8 +5,6 @@ import HeroParallaxDemo from "@/components/HeroParallaxDemo";
 import TestimonialsCards from "@/components/TestimonialsCards";
 import UpcomingWebinars from "@/components/UpcomingWebinars";
 import WhyChooseUs from "@/components/WhyChooseUs";
-// import VerifyEmailPage from "./verifyemail/page";
-// import Account_verification_email from "@/app/Account_verification_email/page";
 
 export default function Home() {
   return (
@@ -18,8 +16,6 @@ export default function Home() {
       <UpcomingWebinars />
       <GoogleGeminiEffectDemo />
       <Footer />
-      {/* <VerifyEmailPage /> */}
-      {/* <Account_verification_email /> */}
     </main>
   );
 }

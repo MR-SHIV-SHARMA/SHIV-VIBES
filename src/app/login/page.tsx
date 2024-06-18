@@ -57,7 +57,7 @@ function LoginPage() {
 
   return (
     <div
-      className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-gray-800 mt-36 
+      className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-gray-800 mt-24 
     flex flex-col items-center justify-center min-h-fit py-2"
     >
       <h2 className="font-bold text-xl mt-4 text-neutral-800 dark:text-neutral-200">
