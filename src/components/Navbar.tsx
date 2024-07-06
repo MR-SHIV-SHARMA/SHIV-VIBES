@@ -27,11 +27,11 @@ function Navbar({ className }: { className?: string }) {
   // List of paths where the navbar should be hidden
   const hiddenPaths = [
     "/contact",
-    "/courses",
-    "/CoursesPage",
-    "/insidecourses",
-    "/overviwecoures",
-    "/bento",
+    // "/courses",
+    // "/CoursesPage",
+    // "/insidecourses",
+    // "/overviwecoures",
+    // "/bento",
     "/login",
     "/signup",
     "/Account_verification_email",
