@@ -1,32 +1,3 @@
-import { NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig"; // Adjust the path as per your project structure
-import Course from "@/models/course.models"; // Adjust the path as per your project structure
-
-// Define the Course interface
-interface Course {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  price: number;
-  instructor: string;
-  isFeatured: boolean;
-  image: string;
-  isFree: boolean;
-  videoDetails: {
-    totalDuration: string;
-    accessPeriod: string;
-    videos: {
-      title: string;
-      duration: string;
-      intro: string;
-      description: string;
-      videoUrl: string;
-    }[];
-  };
-}
-
-// Mock data
 const courses: Course[] = [
   {
     id: 1,
@@ -534,17 +505,70 @@ const courses: Course[] = [
   },
 ];
 
-// Handler for GET request
+import Course from "@/models/course.models";
+import { connect } from "@/dbConfig/dbConfig";
+import User from "@/models/user.models";
+import { NextRequest, NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+connect();
+
+interface Course {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  instructor: string;
+  isFeatured: boolean;
+  image: string;
+  isFree: boolean;
+  videoDetails: {
+    totalDuration: string;
+    accessPeriod: string;
+    videos: {
+      title: string;
+      duration: string;
+      intro: string;
+      description: string;
+      videoUrl: string;
+    }[];
+  };
+}
+
+// Define the custom type for the JWT payload
+interface TokenPayload extends JwtPayload {
+  id: string;
+}
+
 export async function GET(req: Request) {
-  await connect(); // Assuming this connects to your database
+  await connect();
 
   try {
     const { searchParams } = new URL(req.url);
     const courseId = searchParams.get("courseId");
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+
+    let user = null;
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(
+          token,
+          process.env.TOKEN_SECRET!
+        ) as TokenPayload;
+        user = await User.findById(decoded.id);
+      } catch (error) {
+        return NextResponse.json(
+          { success: false, error: "Invalid token" },
+          { status: 401 }
+        );
+      }
+    }
 
     if (courseId) {
       const course = courses.find(
-        (course: Course) => course.id.toString() === courseId
+        (course) => course.id.toString() === courseId
       );
 
       if (!course) {
@@ -552,81 +576,32 @@ export async function GET(req: Request) {
           { success: false, error: "Course not found" },
           { status: 404 }
         );
-      } else {
+      }
+
+      if (!course.isFree && !user) {
         return NextResponse.json(
-          { success: true, data: [course] },
-          { status: 200 }
+          { success: false, error: "Authentication required for paid courses" },
+          { status: 401 }
         );
       }
-    } else {
+
       return NextResponse.json(
-        { success: true, data: courses },
+        { success: true, data: [course] },
+        { status: 200 }
+      );
+    } else {
+      const publicCourses = courses.map((course) => {
+        if (!course.isFree && !user) {
+          return { ...course, videoDetails: null };
+        }
+        return course;
+      });
+
+      return NextResponse.json(
+        { success: true, data: publicCourses },
         { status: 200 }
       );
     }
-  } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message || "Internal server error" },
-      { status: 500 }
-    );
-  }
-}
-
-// Handler for POST request
-export async function POST(req: Request) {
-  await connect(); // Assuming this connects to your database
-
-  try {
-    const {
-      title,
-      description,
-      videoUrl,
-      duration,
-      intro,
-      image,
-      accessPeriod,
-      totalDuration,
-      videos,
-    } = await req.json();
-
-    if (!title || !description) {
-      return NextResponse.json(
-        { success: false, error: "Title and description are required" },
-        { status: 400 }
-      );
-    }
-
-    const newCourse: Course = {
-      id: courses.length + 1,
-      title,
-      slug: title.toLowerCase().replace(/\s+/g, "-"),
-      price: 0,
-      instructor: "Unknown",
-      isFeatured: false,
-      description,
-      image: "",
-      isFree: false,
-      videoDetails: {
-        totalDuration: "00:00",
-        accessPeriod: "00:00",
-        videos: [
-          {
-            title,
-            duration,
-            intro,
-            description,
-            videoUrl,
-          },
-        ],
-      },
-    };
-
-    courses.push(newCourse);
-
-    return NextResponse.json(
-      { success: true, data: newCourse },
-      { status: 201 }
-    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message || "Internal server error" },
