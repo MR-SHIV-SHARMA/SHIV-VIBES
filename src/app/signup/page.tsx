@@ -59,12 +59,14 @@ function SignupFormDemo() {
   }, [user]);
 
   return (
-    <div className="max-w-md w-full mx-auto p-4 rounded-none md:rounded-2xl shadow-input bg-white dark:bg-black flex flex-col items-center justify-center min-h-fit ">
+    <div className="max-w-md w-full mx-auto p-4 rounded-none md:rounded-2xl shadow-input bg-white dark:bg-black flex flex-col items-center justify-center min-h-screen ">
       <Toaster position="top-right" reverseOrder={false} />
       <h2 className="font-bold text-xl  text-neutral-800 dark:text-neutral-200">
         Welcome to SHIV-WEB
       </h2>
-      <h1 className="py-2">{loading ? "Processing" : "Signup"}</h1>
+      <h1 className="py-2 text-neutral-200">
+        {loading ? "Processing" : "Signup"}
+      </h1>
 
       <form onSubmit={onSignup}>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">

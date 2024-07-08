@@ -23,8 +23,8 @@ const CoursesPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black py-12 pt-28">
-      <h1 className="text-lg md:text-7xl text-center font-sans font-bold mb-8 text-white">
+    <div className="min-h-screen bg-black py-12 pt-24">
+      <h1 className="text-lg md:text-7xl text-center font-sans font-bold sm:mb-2 text-white">
         All courses ({courses.length})
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
@@ -49,7 +49,7 @@ const CoursesPage: React.FC = () => {
                     </CardItem>
                     <CardItem translateZ="100" className="w-full mt-4">
                       <Image
-                        src={course.image}
+                        src={course.thumbnail}
                         priority={true}
                         height={300}
                         width={400}
