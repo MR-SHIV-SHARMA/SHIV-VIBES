@@ -1,9 +1,9 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { FaClock, FaCalendarAlt } from "react-icons/fa";
 
 interface VideoDetails {
   title: string;
@@ -16,13 +16,25 @@ interface VideoDetails {
 interface Course {
   title: string;
   description: string;
-  image: string;
+  thumbnail: string;
+  videoUrl: string;
   videoDetails: {
     videos: VideoDetails[];
   };
 }
 
 const CourseDetailsPage = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isListOpen, setIsListOpen] = useState<boolean>(false);
+
+  const toggleLessonVideo = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const toggleLessonList = () => {
+    setIsListOpen(!isListOpen);
+  };
+
   const { id: courseId } = useParams(); // Extracting courseId from URL
   const [course, setCourse] = useState<Course | null>(null);
 
@@ -52,49 +64,72 @@ const CourseDetailsPage = () => {
   }
 
   return (
-    <div className="bg-gray-900 text-white rounded-lg shadow-lg overflow-hidden">
-      <div className="px-6 py-8">
-        <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-        <p className="text-gray-400 mb-6">{course.description}</p>
-        <div className="mb-6">
-          <Image
-            src={course.image}
-            alt={course.title}
-            width={400}
-            height={300}
-            className="rounded-lg"
-          />
+    <div className="bg-gray-900 text-white rounded-lg shadow-lg min-h-screen overflow-hidden">
+      <div className="px-2 sm:px-6 py-4 ">
+        <video
+          className="w-[100%] h-auto sm:h-screen-90"
+          controls
+          poster={course.thumbnail}
+        >
+          <source src={course.videoUrl} type="video/mp4" />
+        </video>
+
+        <h1 className="text-3xl font-bold mt-2 mb-2">{course.title}</h1>
+        <p className="text-gray-400">{course.description}</p>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2 hover:bg-blue-600">
+          Start Learning
+        </button>
+        <p className="text-gray-400 mt-2">This Course Includes</p>
+        <div className="flex items-center mt-2">
+          <FaClock className="text-gray-600 mr-2" />
+          <span className="text-gray-400">2 Hours</span>
         </div>
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Videos</h2>
-          {course.videoDetails?.videos?.map(
-            (video: VideoDetails, index: number) => (
-              <div
-                key={index}
-                className="mb-8 p-6 bg-gray-800 rounded-lg shadow-md"
-              >
-                <h3 className="text-xl font-semibold mb-2">{video.title}</h3>
-                <p className="text-gray-400 mb-2">
-                  <strong>Duration:</strong> {video.duration}
-                </p>
-                <p className="text-gray-400 mb-2">
-                  <strong>Intro:</strong> {video.intro}
-                </p>
-                <p className="text-gray-400 mb-2">
-                  <strong>Description:</strong> {video.description}
-                </p>
-                <a
-                  href={video.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
-                >
-                  Watch Video
-                </a>
-              </div>
-            )
+        <p className="ml-6 text-gray-400"> Of self-paced video lessons</p>
+        <div className="flex items-center mt-2">
+          <FaCalendarAlt className="text-gray-600 mr-2" />
+          <span className="text-gray-400">90 Days of Access</span>
+        </div>
+        <p className="ml-6 text-gray-400">To your Free Course</p>
+        <button
+          onClick={toggleLessonList}
+          className="text-white w-full py-2 rounded mt-4 bg-blue-600"
+        >
+          {isListOpen ? (
+            <span className="p-3 mb-4">Hide Lessons</span>
+          ) : (
+            <span className="p-3 mb-4">Show Lessons</span>
           )}
-        </div>
+        </button>
+        {isListOpen && (
+          <ul className="list-none p-0 mt-4">
+            {course.videoDetails?.videos?.map((video, index) => (
+              <li
+                key={index}
+                className="mb-4 p-4 bg-gray-800 rounded-lg shadow-md"
+              >
+                <div className="flex justify-between items-center">
+                  <h3
+                    className="text-blue-500 cursor-pointer hover:underline"
+                    onClick={() => toggleLessonVideo(index)}
+                  >
+                    {video.title}
+                  </h3>
+                  <span className="text-sm text-gray-300">
+                    {video.duration}
+                  </span>
+                </div>
+                {openIndex === index && (
+                  <div className="w-full mt-4">
+                    <video controls className="w-full rounded-lg">
+                      <source src={video.videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

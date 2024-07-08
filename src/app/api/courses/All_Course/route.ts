@@ -8,8 +8,10 @@ const courses: Course[] = [
     price: 99.99,
     instructor: "John Doe",
     isFeatured: true,
-    image:
-      "https://images.pexels.com/photos/2021348/pexels-photo-2021348.jpeg?auto=compress&cs=tinysrgb&w=600",
+    thumbnail:
+      "https://images.pexels.com/photos/26763724/pexels-photo-26763724/free-photo-of-a-man-playing-an-acoustic-guitar-in-a-park.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl:
+      "https://videos.pexels.com/video-files/7502873/7502873-hd_1920_1080_30fps.mp4",
     isFree: true,
     videoDetails: {
       totalDuration: "2 Hours",
@@ -21,7 +23,8 @@ const courses: Course[] = [
           intro: "Introduction to the basics of playing guitar.",
           description:
             "Learn how to hold the guitar, basic strumming techniques, and simple chords.",
-          videoUrl: "https://youtu.be/23Uw69hL2E4?si=K3-GV741l-MdJknh",
+          videoUrl:
+            "https://videos.pexels.com/video-files/26620363/11976368_1920_1080_30fps.mp4",
         },
         {
           title: "1.02 Basic Chords",
@@ -29,14 +32,14 @@ const courses: Course[] = [
           intro: "Learn the essential chords every guitarist should know.",
           description:
             "This video covers the finger positions and transitions between basic chords.",
-          videoUrl: "https://youtu.be/rTMN8rCBWkw?si=V69W60XvXKTiVPsT",
+          videoUrl: "https://videos.pexels.com/video-files/25635838/11902842_1920_1080_24fps.mp4",
         },
         {
           title: "1.03 Simple Songs",
           duration: "06:35",
           intro: "Play your first songs on the guitar.",
           description: "Practice simple songs using the chords you've learned.",
-          videoUrl: "https://youtu.be/5jca-sWgemI?si=qrYGdqV1jlSUlxKx",
+          videoUrl: "https://videos.pexels.com/video-files/8116750/8116750-hd_1920_1080_25fps.mp4",
         },
       ],
     },
@@ -50,9 +53,10 @@ const courses: Course[] = [
     price: 109.99,
     instructor: "Jane Smith",
     isFeatured: false,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/322719/pexels-photo-322719.jpeg?auto=compress&cs=tinysrgb&w=600",
-    isFree: false,
+    videoUrl: "https://videos.pexels.com/video-files/19057430/19057430-hd_1920_1080_25fps.mp4",
+    isFree: true,
     videoDetails: {
       totalDuration: "3 Hours",
       accessPeriod: "90 Days",
@@ -63,21 +67,21 @@ const courses: Course[] = [
           intro: "Getting started with piano basics.",
           description:
             "Learn how to sit at the piano, finger positions, and basic keys.",
-          videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+          videoUrl: "https://videos.pexels.com/video-files/8128526/8128526-hd_1920_1080_25fps.mp4",
         },
         {
           title: "2.02 Basic Scales",
           duration: "08:20",
           intro: "Introduction to piano scales.",
           description: "Understand and practice major and minor scales.",
-          videoUrl: "https://youtu.be/e9dM3_6IR20?si=XLWC3OknKFs9LdyS",
+          videoUrl: "https://videos.pexels.com/video-files/17927653/17927653-hd_1920_1080_24fps.mp4",
         },
         {
           title: "2.03 Playing Simple Melodies",
           duration: "09:45",
           intro: "Start playing simple piano melodies.",
           description: "Use scales and finger positions to play easy songs.",
-          videoUrl: "https://youtu.be/zLdCdUOdTac?si=ZyE8rvAZsA6fo5X8",
+          videoUrl: "https://videos.pexels.com/video-files/7571591/7571591-hd_1920_1080_25fps.mp4",
         },
       ],
     },
@@ -91,8 +95,10 @@ const courses: Course[] = [
     price: 119.99,
     instructor: "Emily Johnson",
     isFeatured: true,
-    image:
-      "https://images.pexels.com/photos/3824763/pexels-photo-3824763.jpeg?auto=compress&cs=tinysrgb&w=600",
+    thumbnail:
+      "https://images.pexels.com/photos/3990842/pexels-photo-3990842.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    videoUrl: "https://videos.pexels.com/video-files/6274261/6274261-uhd_2560_1440_30fps.mp4",
+
     isFree: true,
     videoDetails: {
       totalDuration: "2.5 Hours",
@@ -104,7 +110,7 @@ const courses: Course[] = [
           intro: "Mastering breath control for singing.",
           description:
             "Techniques to improve your breath control and sustain notes longer.",
-          videoUrl: "https://example.com/video7",
+          videoUrl: "https://videos.pexels.com/video-files/7804282/7804282-hd_1920_1080_25fps.mp4",
         },
         {
           title: "3.02 Vocal Warm-ups",
@@ -112,14 +118,14 @@ const courses: Course[] = [
           intro: "Effective warm-up exercises.",
           description:
             "Learn and practice vocal warm-ups to prepare your voice.",
-          videoUrl: "https://example.com/video8",
+          videoUrl: "https://videos.pexels.com/video-files/8039800/8039800-uhd_2732_1440_25fps.mp4",
         },
         {
           title: "3.03 Advanced Techniques",
           duration: "15:00",
           intro: "Exploring advanced vocal techniques.",
           description: "Learn vibrato, trills, and other advanced techniques.",
-          videoUrl: "https://example.com/video9",
+          videoUrl: "https://videos.pexels.com/video-files/8134905/8134905-hd_1920_1080_25fps.mp4",
         },
       ],
     },
@@ -133,9 +139,11 @@ const courses: Course[] = [
     price: 129.99,
     instructor: "Mike Brown",
     isFeatured: false,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/7715644/pexels-photo-7715644.jpeg?auto=compress&cs=tinysrgb&w=600",
-    isFree: false,
+    videoUrl: "https://videos.pexels.com/video-files/19265267/19265267-uhd_2560_1440_24fps.mp4",
+
+    isFree: true,
     videoDetails: {
       totalDuration: "4 Hours",
       accessPeriod: "90 Days",
@@ -146,21 +154,21 @@ const courses: Course[] = [
           intro: "Introduction to basic drumming techniques.",
           description:
             "Learn how to hold drumsticks, basic rhythms, and drumming posture.",
-          videoUrl: "https://example.com/video10",
+          videoUrl: "https://videos.pexels.com/video-files/3582370/3582370-hd_1920_1080_24fps.mp4",
         },
         {
           title: "4.02 Intermediate Rhythms",
           duration: "10:00",
           intro: "Intermediate drumming patterns.",
           description: "Practice intermediate rhythms and drum fills.",
-          videoUrl: "https://example.com/video11",
+          videoUrl: "https://videos.pexels.com/video-files/7502671/7502671-hd_1920_1080_30fps.mp4",
         },
         {
           title: "4.03 Advanced Techniques",
           duration: "12:00",
           intro: "Advanced drumming techniques.",
           description: "Learn advanced drumming techniques and soloing.",
-          videoUrl: "https://example.com/video12",
+          videoUrl: "https://videos.pexels.com/video-files/7722807/7722807-uhd_2560_1440_25fps.mp4",
         },
       ],
     },
@@ -174,8 +182,10 @@ const courses: Course[] = [
     price: 139.99,
     instructor: "Chris Davis",
     isFeatured: false,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/9002892/pexels-photo-9002892.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: true,
     videoDetails: {
       totalDuration: "3 Hours",
@@ -216,8 +226,10 @@ const courses: Course[] = [
     price: 149.99,
     instructor: "Alex Wilson",
     isFeatured: true,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/9005436/pexels-photo-9005436.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: true,
     videoDetails: {
       totalDuration: "5 Hours",
@@ -257,8 +269,10 @@ const courses: Course[] = [
     price: 159.99,
     instructor: "Samantha Miller",
     isFeatured: false,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/4708882/pexels-photo-4708882.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: false,
     videoDetails: {
       totalDuration: "3.5 Hours",
@@ -298,8 +312,10 @@ const courses: Course[] = [
     price: 169.99,
     instructor: "Luke Harris",
     isFeatured: true,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/6953871/pexels-photo-6953871.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: true,
     videoDetails: {
       totalDuration: "4 Hours",
@@ -340,8 +356,10 @@ const courses: Course[] = [
     price: 179.99,
     instructor: "Grace Lee",
     isFeatured: false,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/4127953/pexels-photo-4127953.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: false,
     videoDetails: {
       totalDuration: "6 Hours",
@@ -383,8 +401,10 @@ const courses: Course[] = [
     price: 189.99,
     instructor: "Ethan Moore",
     isFeatured: true,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/5288861/pexels-photo-5288861.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: true,
     videoDetails: {
       totalDuration: "2.5 Hours",
@@ -426,8 +446,10 @@ const courses: Course[] = [
     price: 189.99,
     instructor: "Ejhon Mogi",
     isFeatured: true,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/1125748/pexels-photo-1125748.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: true,
     videoDetails: {
       totalDuration: "2 Hours",
@@ -469,8 +491,10 @@ const courses: Course[] = [
     price: 200.99,
     instructor: "Ejhon Mogi",
     isFeatured: true,
-    image:
+    thumbnail:
       "https://images.pexels.com/photos/4471308/pexels-photo-4471308.jpeg?auto=compress&cs=tinysrgb&w=600",
+    videoUrl: "https://youtu.be/827jmswqnEA?si=WMjydh8FlwZ8BSNS",
+
     isFree: false,
     videoDetails: {
       totalDuration: "2.5 Hours",
@@ -521,7 +545,8 @@ interface Course {
   price: number;
   instructor: string;
   isFeatured: boolean;
-  image: string;
+  thumbnail: string;
+  videoUrl: string;
   isFree: boolean;
   videoDetails: {
     totalDuration: string;

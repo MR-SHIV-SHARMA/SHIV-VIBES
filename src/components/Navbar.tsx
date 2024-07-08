@@ -26,12 +26,78 @@ function Navbar({ className }: { className?: string }) {
 
   // List of paths where the navbar should be hidden
   const hiddenPaths = [
-    "/contact",
     // "/courses",
-    // "/CoursesPage",
-    // "/insidecourses",
-    // "/overviwecoures",
-    // "/bento",
+    // "/about",
+    // "/blog",
+    // "/news",
+    // "/faq",
+    // "/team",
+    // "/careers",
+    // "/blog/post",
+    // "/blog/category",
+    // "/blog/tag",
+    // "/search",
+    // "/404",
+    // "/admin",
+    // "/admin/dashboard",
+    // "/admin/users",
+    // "/admin/courses",
+    // "/admin/categories",
+    // "/admin/tags",
+    // "/admin/orders",
+    // "/admin/reports",
+    // "/admin/settings",
+    // "/admin/edit-user/[id]",
+    // "/admin/edit-course/[id]",
+    // "/admin/edit-category/[id]",
+    // "/admin/edit-tag/[id]",
+    // "/admin/edit-order/[id]",
+    // "/admin/edit-report/[id]",
+    // "/admin/edit-setting/[id,
+    // "/admin/edit-setting/[key]",
+    // "/admin/add-user",
+    // "/admin/add-course",
+    // "/admin/add-category",
+    // "/admin/add-tag",
+    // "/admin/add-order",
+    // "/admin/add-report",
+    // "/admin/add-setting",
+    // "/about",
+    // "/blog",
+    // "/news",
+    // "/faq",
+    // "/team",
+    // "/careers",
+    // "/blog/post/[slug]",
+    // "/blog/category/[slug]",
+    // "/blog/tag/[slug]",
+    // "/search",
+    // "/404",
+    // "/contact",
+    // "/payment",
+    // "/payment-success",
+    // "/payment-cancelled",
+    // "/payment-failed",
+    // "/admin",
+    // "/admin/dashboard",
+    // "/admin/users",
+    // "/admin/courses",
+    // "/admin/categories",
+    // "/admin/tags",
+    // "/admin/orders",
+    "/contact",
+    "/courses/1",
+    "/courses/2",
+    "/courses/3",
+    "/courses/4",
+    "/courses/5",
+    "/courses/6",
+    "/courses/7",
+    "/courses/8",
+    "/courses/9",
+    "/courses/10",
+    "/courses/11",
+    "/courses/12",
     "/login",
     "/signup",
     "/Account_verification_email",
@@ -82,12 +148,12 @@ function Navbar({ className }: { className?: string }) {
         >
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/courses">All Courses</HoveredLink>
-            <HoveredLink href="/bento">Basic Music Theory</HoveredLink>
-            <HoveredLink href="/overviwecoures">
+            <HoveredLink href="/basic_music">Basic Music Theory</HoveredLink>
+            <HoveredLink href="/Advanced_Composition">
               Advanced Composition
             </HoveredLink>
-            <HoveredLink href="/insidecourses">Songwriting</HoveredLink>
-            <HoveredLink href="/CoursesPage">Music Production</HoveredLink>
+            <HoveredLink href="/Songwriting">Songwriting</HoveredLink>
+            <HoveredLink href="/Music_Production">Music Production</HoveredLink>
           </div>
         </MenuItem>
         <Link href="/contact">

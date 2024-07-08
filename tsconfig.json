@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types"
-  ],
+, "src/app/Advanced_Composition/page.tsx"  ],
   "exclude": ["node_modules"]
 }
