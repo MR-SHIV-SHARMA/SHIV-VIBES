@@ -29,7 +29,7 @@ const MusicTheoryComponent: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get<{ success: boolean; data: MusicData[] }>('http://localhost:3000/api/courses/basic_music');
+                const response = await axios.get<{ success: boolean; data: MusicData[] }>('/api/courses/basic_music');
                 setMusicData(response.data.data[0]); // Assuming data structure is { success: true, data: [ { ... } ] }
                 setLoading(false);
             } catch (error) {

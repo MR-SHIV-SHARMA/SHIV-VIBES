@@ -18,7 +18,7 @@ const MusicProductionComponent: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get<{ success: boolean; data: Topic[] }>(
-          "http://localhost:3000/api/courses/Music_Production"
+          "/api/courses/Music_Production"
         );
         if (response.data.success && response.data.data.length > 0) {
           setMusicProductionData(response.data.data[0].topics);
