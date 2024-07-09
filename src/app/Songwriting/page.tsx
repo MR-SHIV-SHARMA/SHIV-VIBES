@@ -69,7 +69,7 @@ const SongWritingComponent: React.FC = () => {
         const response = await axios.get<{
           success: boolean;
           data: CraftingMelodiesAndLyrics[];
-        }>("http://localhost:3000/api/courses/Songwriting");
+        }>("/api/courses/Songwriting");
 
         // Assuming the API response contains a `data` field with your structured data
         setSongWritingData(response.data.data[1]);

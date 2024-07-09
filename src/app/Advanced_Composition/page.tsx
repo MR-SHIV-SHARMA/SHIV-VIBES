@@ -28,7 +28,7 @@ const AdvancedComposition: React.FC = () => {
         const response = await axios.get<{
           success: boolean;
           data: AdvancedComposition[];
-        }>("http://localhost:3000/api/courses/Advanced_Composition");
+        }>("/api/courses/Advanced_Composition");
 
         // const data = await response.json();
         setCompositionData(response.data.data[0]);
