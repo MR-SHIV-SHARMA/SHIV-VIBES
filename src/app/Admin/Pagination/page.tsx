@@ -22,7 +22,8 @@ const Pagination: React.FC<PaginationProps> = ({
     <div className="flex justify-between mt-4">
       <div>
         Showing {indexOfFirstProduct + 1}-
-        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts} products
+        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts}
+        products
       </div>
       <div className="flex space-x-2">
         <button
