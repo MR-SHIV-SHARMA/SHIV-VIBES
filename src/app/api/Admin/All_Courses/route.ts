@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Course from "../../../../models/Admin/All_Courses";
+import Course from "@/models/Admin/All_Courses";
 import { connect } from "@/dbConfig/dbConfig";
 import url from "url";
 import client from "../../../../client";
