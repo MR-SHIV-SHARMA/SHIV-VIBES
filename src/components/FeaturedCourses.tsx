@@ -1,9 +1,11 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Meteors } from "./ui/meteors";
-import courseData from "../data/music_courses.json";
 import { BackgroundGradient } from "./ui/background-gradient";
+import axios from "axios";
 
+// Define the Course interface to ensure correct typing
 interface Course {
   id: number;
   title: string;
@@ -15,22 +17,35 @@ interface Course {
 }
 
 function FeaturedCourses() {
-  const featuredCourses = courseData.courses.filter(
-    (course: Course) => course.isFeatured
-  );
+  const [courses, setCourses] = useState<Course[]>([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("/api/Admin/All_Courses");
+        setCourses(response.data.data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
+  // Filter featured courses
+  const featuredCourses = courses.filter((course) => course.isFeatured);
 
   return (
     <div className="py-12 bg-gray-900">
-      <div>
-        <div className="text-center">
-          <h2 className="text-base text-teal-600 font-semibold tracking-wide uppercase">
-            FEATURED COURSES
-          </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
-            Learn With the Best
-          </p>
-        </div>
+      <div className="text-center">
+        <h2 className="text-base text-teal-600 font-semibold tracking-wide uppercase">
+          FEATURED COURSES
+        </h2>
+        <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-white sm:text-4xl">
+          Learn With the Best
+        </p>
       </div>
+
       <div className="mt-10 mx-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
           {featuredCourses.map((course: Course) => (
@@ -62,9 +77,12 @@ function FeaturedCourses() {
                     {course.description}
                   </p>
 
-                  <button className="border px-4 py-1 rounded-lg  border-gray-500 text-gray-300">
-                    <Link href={`/courses/${course.slug}`}>Explore</Link>
-                  </button>
+                  <Link
+                    href={`/courses/${course.slug}`}
+                    className="border px-4 py-2 rounded-lg border-gray-500 text-gray-300 hover:bg-gray-800 transition duration-300"
+                  >
+                    Explore
+                  </Link>
                   <Meteors number={20} />
                 </div>
               </BackgroundGradient>
@@ -72,12 +90,13 @@ function FeaturedCourses() {
           ))}
         </div>
       </div>
+
       <div className="mt-20 text-center">
         <Link
           href={"/courses"}
           className="px-4 py-2 rounded border border-neutral-600 text-neutral-700 bg-white hover:bg-gray-100 transition duration-200"
         >
-          View All courses
+          View All Courses
         </Link>
       </div>
     </div>
