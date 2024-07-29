@@ -19,7 +19,7 @@ const MusicProductionComponent: React.FC = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get<{ success: boolean; data: Topic[] }>(
-          `http://localhost:3000/api/Admin/Music_Production`
+          `/api/Admin/Music_Production`
         );
         if (response.data.success) {
           setMusicProductionData(response.data.data);
