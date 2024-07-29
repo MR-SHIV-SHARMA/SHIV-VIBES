@@ -12,7 +12,7 @@ const SongWritingComponent = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/Admin/Songwriting`
+          `/api/Admin/Songwriting`
         );
         // Filter out the id field from each course object
         const filteredCourses = response.data.data.map(
