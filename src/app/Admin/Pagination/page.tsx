@@ -1,7 +1,15 @@
 import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const Pagination = ({
+// Define the types for the props
+interface PaginationProps {
+  currentPage: number;
+  productsPerPage: number;
+  totalProducts: number;
+  paginate: (pageNumber: number) => void;
+}
+
+const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   productsPerPage,
   totalProducts,
@@ -14,8 +22,7 @@ const Pagination = ({
     <div className="flex justify-between mt-4">
       <div>
         Showing {indexOfFirstProduct + 1}-
-        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts}{" "}
-        products
+        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts} products
       </div>
       <div className="flex space-x-2">
         <button
