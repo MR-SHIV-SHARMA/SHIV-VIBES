@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "target": "es5",
     "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
+    "module": "commonjs",
     "moduleResolution": "node",
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -31,12 +31,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "**/*.tsx",
-    "types",
-    "src/app/NavComponent/Advanced_Composition/page.tsx",
-    "src/models/users/profile_models.js",
-    "src/app/Admin/All_Courses/page.jsx",
-    "src/app/NavComponent/Songwriting/page.jsx"
-  ],
+    "types"
+, "src/app/NavComponent/Advanced_Composition/page.tsx", "src/models/users/profile_models.js", "src/app/Admin/All_Courses/page.jsx", "src/app/NavComponent/Songwriting/page.jsx"  ],
   "exclude": ["node_modules"]
 }

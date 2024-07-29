@@ -290,7 +290,7 @@ const Admin = () => {
     setSearchQuery(e.target.value);
   };
 
-  const productsPerPage = 20;
+  const productsPerPage = 5;
 
   // Toggle action menu visibility
   const handleEllipsisClick = (index) => {
@@ -543,7 +543,7 @@ const Admin = () => {
                       </div>
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">
-                        Thumbnail URL:
+                          Thumbnail URL:
                         </label>
                         <input
                           type="text"
@@ -1266,104 +1266,144 @@ const Admin = () => {
                                           </div>
 
                                           <div className="mb-4">
-  {product &&
-  product.videos &&
-  product.videos.length > 0 ? (
-    product.videos.map((video, index) => {
-      const idPrefix = `video-${index}-`; // Unique prefix for IDs
+                                            {product &&
+                                            product.videos &&
+                                            product.videos.length > 0 ? (
+                                              product.videos.map(
+                                                (video, index) => {
+                                                  const idPrefix = `video-${index}-`; // Unique prefix for IDs
 
-      return (
-        <div key={index} className="mb-4">
-          <div className="mb-4">
-            <label
-              htmlFor={`${idPrefix}title`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Video Title:
-            </label>
-            <input
-              id={`${idPrefix}title`}
-              name={`title-${index}`} // Unique name attribute
-              type="text"
-              value={video.title}
-              onChange={(e) => handleInputChange(e, index, true)}
-              className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor={`${idPrefix}duration`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Video Duration:
-            </label>
-            <input
-              id={`${idPrefix}duration`}
-              name={`duration-${index}`} // Unique name attribute
-              type="text"
-              value={video.duration}
-              onChange={(e) => handleInputChange(e, index, true)}
-              className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor={`${idPrefix}intro`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Video Intro:
-            </label>
-            <input
-              id={`${idPrefix}intro`}
-              name={`intro-${index}`} // Unique name attribute
-              type="text"
-              value={video.intro ? "true" : "false"}
-              onChange={(e) => handleInputChange(e, index, true)}
-              className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor={`${idPrefix}description`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Video Description:
-            </label>
-            <input
-              id={`${idPrefix}description`}
-              name={`description-${index}`} // Unique name attribute
-              type="text"
-              value={video.description}
-              onChange={(e) => handleInputChange(e, index, true)}
-              className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor={`${idPrefix}videoUrl`}
-              className="block text-sm font-medium text-gray-700"
-            >
-              Video URL:
-            </label>
-            <input
-              id={`${idPrefix}videoUrl`}
-              name={`videoUrl-${index}`} // Unique name attribute
-              type="text"
-              value={video.videoUrl}
-              onChange={(e) => handleInputChange(e, index, true)}
-              className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-      );
-    })
-  ) : (
-    <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-      No videos available
-    </div>
-  )}
-</div>
-
+                                                  return (
+                                                    <div
+                                                      key={index}
+                                                      className="mb-4"
+                                                    >
+                                                      <div className="mb-4">
+                                                        <label
+                                                          htmlFor={`${idPrefix}title`}
+                                                          className="block text-sm font-medium text-gray-700"
+                                                        >
+                                                          Video Title:
+                                                        </label>
+                                                        <input
+                                                          id={`${idPrefix}title`}
+                                                          name={`title-${index}`} // Unique name attribute
+                                                          type="text"
+                                                          value={video.title}
+                                                          onChange={(e) =>
+                                                            handleInputChange(
+                                                              e,
+                                                              index,
+                                                              true
+                                                            )
+                                                          }
+                                                          className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                      </div>
+                                                      <div className="mb-4">
+                                                        <label
+                                                          htmlFor={`${idPrefix}duration`}
+                                                          className="block text-sm font-medium text-gray-700"
+                                                        >
+                                                          Video Duration:
+                                                        </label>
+                                                        <input
+                                                          id={`${idPrefix}duration`}
+                                                          name={`duration-${index}`} // Unique name attribute
+                                                          type="text"
+                                                          value={video.duration}
+                                                          onChange={(e) =>
+                                                            handleInputChange(
+                                                              e,
+                                                              index,
+                                                              true
+                                                            )
+                                                          }
+                                                          className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                      </div>
+                                                      <div className="mb-4">
+                                                        <label
+                                                          htmlFor={`${idPrefix}intro`}
+                                                          className="block text-sm font-medium text-gray-700"
+                                                        >
+                                                          Video Intro:
+                                                        </label>
+                                                        <input
+                                                          id={`${idPrefix}intro`}
+                                                          name={`intro-${index}`} // Unique name attribute
+                                                          type="text"
+                                                          value={
+                                                            video.intro
+                                                              ? "true"
+                                                              : "false"
+                                                          }
+                                                          onChange={(e) =>
+                                                            handleInputChange(
+                                                              e,
+                                                              index,
+                                                              true
+                                                            )
+                                                          }
+                                                          className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                      </div>
+                                                      <div className="mb-4">
+                                                        <label
+                                                          htmlFor={`${idPrefix}description`}
+                                                          className="block text-sm font-medium text-gray-700"
+                                                        >
+                                                          Video Description:
+                                                        </label>
+                                                        <input
+                                                          id={`${idPrefix}description`}
+                                                          name={`description-${index}`} // Unique name attribute
+                                                          type="text"
+                                                          value={
+                                                            video.description
+                                                          }
+                                                          onChange={(e) =>
+                                                            handleInputChange(
+                                                              e,
+                                                              index,
+                                                              true
+                                                            )
+                                                          }
+                                                          className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                      </div>
+                                                      <div className="mb-4">
+                                                        <label
+                                                          htmlFor={`${idPrefix}videoUrl`}
+                                                          className="block text-sm font-medium text-gray-700"
+                                                        >
+                                                          Video URL:
+                                                        </label>
+                                                        <input
+                                                          id={`${idPrefix}videoUrl`}
+                                                          name={`videoUrl-${index}`} // Unique name attribute
+                                                          type="text"
+                                                          value={video.videoUrl}
+                                                          onChange={(e) =>
+                                                            handleInputChange(
+                                                              e,
+                                                              index,
+                                                              true
+                                                            )
+                                                          }
+                                                          className="border border-gray-300 rounded-md w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        />
+                                                      </div>
+                                                    </div>
+                                                  );
+                                                }
+                                              )
+                                            ) : (
+                                              <div className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                No videos available
+                                              </div>
+                                            )}
+                                          </div>
 
                                           <div className="flex justify-end">
                                             <button
