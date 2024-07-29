@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { connect } from "@/dbConfig/dbConfig";
-import User from '../../../../models/user.models';
+import User from '../../../../models/users/user.models';
 import Course from '../../../../models/course.models';
 
 connect();

@@ -17,7 +17,7 @@ function Footer() {
                     <ul>
                         <li>
                             <a
-                                href="#"
+                                href="/"
                                 className="hover:text-white transition-colors duration-300"
                             >
                                 Home
@@ -25,7 +25,7 @@ function Footer() {
                         </li>
                         <li>
                             <a
-                                href="#"
+                                href="aboute"
                                 className="hover:text-white transition-colors duration-300"
                             >
                                 About
@@ -33,7 +33,7 @@ function Footer() {
                         </li>
                         <li>
                             <a
-                                href="#"
+                                href="/courses"
                                 className="hover:text-white transition-colors duration-300"
                             >
                                 Courses
@@ -41,7 +41,7 @@ function Footer() {
                         </li>
                         <li>
                             <a
-                                href="#"
+                                href="/contact"
                                 className="hover:text-white transition-colors duration-300"
                             >
                                 Contact
@@ -53,19 +53,19 @@ function Footer() {
                     <h2 className="text-white text-lg font-semibold mb-4">Follow Us</h2>
                     <div className="flex flex-col">
                         <a
-                            href="#"
+                            href="https://www.facebook.com/profile.php?id=100073756635769"
                             className="hover:text-white transition-colors duration-300"
                         >
                             Facebook
                         </a>
                         <a
-                            href="#"
+                            href="https://x.com/Shiv_Sharma_786"
                             className="hover:text-white transition-colors duration-300"
                         >
                             Twitter
                         </a>
                         <a
-                            href="#"
+                            href="https://www.instagram.com/mr_shiv_sharma_1/"
                             className="hover:text-white transition-colors duration-300"
                         >
                             Instagram
@@ -74,13 +74,13 @@ function Footer() {
                 </div>
                 <div>
                     <h2 className="text-white text-lg font-semibold mb-4">Contact Us</h2>
-                    <p>New Delhi, India</p>
-                    <p>Delhi 10001</p>
-                    <p>Email: info@musicschool.com</p>
-                    <p>Phone: (123) 456-7890</p>
+                    <p>Jaipur, India</p>
+                    <p>Jaipur 303901</p>
+                    <p>Email: shivps7568@gmail.com</p>
+                    <p>Phone: (637) 793-0902</p>
                 </div>
             </div>
-            <p className="text-center text-xs pt-8">© 2024 Music School. All rights reserved.</p>
+            <p className="text-center text-xs pt-8">© 2024 Shiv Vibes. All rights reserved.</p>
         </footer>
     )
 }

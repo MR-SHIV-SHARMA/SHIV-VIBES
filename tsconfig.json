@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types"
-, "src/app/Advanced_Composition/page.tsx"  ],
+, "src/app/NavComponent/Advanced_Composition/page.tsx", "src/models/users/profile_models.js", "src/app/Admin/All_Courses/page.jsx", "src/app/NavComponent/Songwriting/page.jsx"  ],
   "exclude": ["node_modules"]
 }

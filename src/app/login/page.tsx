@@ -49,10 +49,12 @@ function LoginPage() {
 
   useEffect(() => {
     if (user.email.length > 0 && user.password.length > 0) {
+      console.log(user.email);
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
     }
+    localStorage.setItem('loggedInEmail', user.email);
   }, [user]);
 
   return (
