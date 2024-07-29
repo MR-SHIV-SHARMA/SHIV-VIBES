@@ -49,7 +49,7 @@ const Admin = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/Admin/Advanced_Composition`
+          `/api/Admin/Advanced_Composition`
         );
         setAll_Courses(response.data.data);
         setLoading(false);
@@ -103,7 +103,7 @@ const Admin = () => {
     const data = JSON.stringify(course);
     const config = {
       method: "PUT",
-      url: `http://localhost:3000/api/Admin/Advanced_Composition?id=${course._id}`,
+      url: `/api/Admin/Advanced_Composition?id=${course._id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -127,7 +127,7 @@ const Admin = () => {
   const deleteCourse = async (_id) => {
     const config = {
       method: "DELETE",
-      url: `http://localhost:3000/api/Admin/Advanced_Composition?id=${_id}`,
+      url: `/api/Admin/Advanced_Composition?id=${_id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -216,7 +216,7 @@ const Admin = () => {
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:3000/api/Admin/Advanced_Composition",
+      url: "/api/Admin/Advanced_Composition",
       headers: {
         "Content-Type": "application/json",
       },

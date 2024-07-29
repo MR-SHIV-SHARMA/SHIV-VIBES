@@ -54,7 +54,7 @@ const Admin = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/Admin/Basic_Music`
+          `/api/Admin/Basic_Music`
         );
         setAll_Courses(response.data.data);
         setLoading(false);
@@ -162,7 +162,7 @@ const Admin = () => {
     const data = JSON.stringify(course);
     const config = {
       method: "PUT",
-      url: `http://localhost:3000/api/Admin/Basic_Music?id=${course._id}`,
+      url: `/api/Admin/Basic_Music?id=${course._id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -183,7 +183,7 @@ const Admin = () => {
   const deleteCourse = async (_id) => {
     const config = {
       method: "DELETE",
-      url: `http://localhost:3000/api/Admin/Basic_Music?id=${_id}`,
+      url: `/api/Admin/Basic_Music?id=${_id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -202,7 +202,7 @@ const Admin = () => {
   const addCourse = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/Admin/Basic_Music",
+        "/api/Admin/Basic_Music",
         newCourse,
         {
           headers: {
@@ -273,7 +273,7 @@ const Admin = () => {
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:3000/api/Admin/Basic_Music",
+      url: "/api/Admin/Basic_Music",
       headers: {
         "Content-Type": "application/json",
       },
