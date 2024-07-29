@@ -35,7 +35,7 @@ const AllCourses = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/Admin/Songwriting`
+          `/api/Admin/Songwriting`
         );
         setAllCourses(response.data.data);
         setLoading(false);
@@ -93,7 +93,7 @@ const AllCourses = () => {
     const data = JSON.stringify(course);
     const config = {
       method: "PUT",
-      url: `http://localhost:3000/api/Admin/Songwriting?id=${course._id}`,
+      url: `/api/Admin/Songwriting?id=${course._id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -114,7 +114,7 @@ const AllCourses = () => {
   const deleteCourse = async (_id) => {
     const config = {
       method: "DELETE",
-      url: `http://localhost:3000/api/Admin/Songwriting?id=${_id}`,
+      url: `/api/Admin/Songwriting?id=${_id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -133,7 +133,7 @@ const AllCourses = () => {
   const addCourse = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/Admin/Songwriting",
+        "/api/Admin/Songwriting",
         newCourse,
         {
           headers: { "Content-Type": "application/json" },

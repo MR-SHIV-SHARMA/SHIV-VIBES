@@ -72,7 +72,7 @@ const Music_Production = () => {
     const data = JSON.stringify(course);
     const config = {
       method: "PUT",
-      url: `http://localhost:3000/api/Admin/Music_Production?id=${course._id}`,
+      url: `/api/Admin/Music_Production?id=${course._id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -95,7 +95,7 @@ const Music_Production = () => {
   const deleteCourse = async (_id) => {
     const config = {
       method: "DELETE",
-      url: `http://localhost:3000/api/Admin/Music_Production?id=${_id}`,
+      url: `/api/Admin/Music_Production?id=${_id}`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -143,7 +143,7 @@ const Music_Production = () => {
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "http://localhost:3000/api/Admin/Music_Production",
+      url: "/api/Admin/Music_Production",
       headers: {
         "Content-Type": "application/json",
       },
