@@ -49,7 +49,7 @@ const featuredWebinars = [
 
 function UpcomingWebinars() {
   return (
-    <div className="h-[40rem] w-full flex items-center justify-center flex-wrap gap-4">
+    <div className="h-[40rem] w-full flex items-center justify-center px-4 mb-8 flex-wrap gap-4">
       {featuredWebinars.map((webinar) => (
         <PinContainer
           key={webinar.slug}

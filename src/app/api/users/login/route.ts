@@ -1,7 +1,7 @@
 // ./api/users/login.js
 
 import { connect } from "@/dbConfig/dbConfig";
-import User from "@/models/user.models";
+import User from "@/models/users/user.models";
 import { NextRequest, NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -26,65 +25,14 @@ function Navbar({ className }: { className?: string }) {
 
   // List of paths where the navbar should be hidden
   const hiddenPaths = [
-    // "/courses",
-    // "/about",
-    // "/blog",
-    // "/news",
-    // "/faq",
-    // "/team",
-    // "/careers",
-    // "/blog/post",
-    // "/blog/category",
-    // "/blog/tag",
-    // "/search",
-    // "/404",
-    // "/admin",
-    // "/admin/dashboard",
-    // "/admin/users",
-    // "/admin/courses",
-    // "/admin/categories",
-    // "/admin/tags",
-    // "/admin/orders",
-    // "/admin/reports",
-    // "/admin/settings",
-    // "/admin/edit-user/[id]",
-    // "/admin/edit-course/[id]",
-    // "/admin/edit-category/[id]",
-    // "/admin/edit-tag/[id]",
-    // "/admin/edit-order/[id]",
-    // "/admin/edit-report/[id]",
-    // "/admin/edit-setting/[id,
-    // "/admin/edit-setting/[key]",
-    // "/admin/add-user",
-    // "/admin/add-course",
-    // "/admin/add-category",
-    // "/admin/add-tag",
-    // "/admin/add-order",
-    // "/admin/add-report",
-    // "/admin/add-setting",
-    // "/about",
-    // "/blog",
-    // "/news",
-    // "/faq",
-    // "/team",
-    // "/careers",
-    // "/blog/post/[slug]",
-    // "/blog/category/[slug]",
-    // "/blog/tag/[slug]",
-    // "/search",
-    // "/404",
-    // "/contact",
-    // "/payment",
-    // "/payment-success",
-    // "/payment-cancelled",
-    // "/payment-failed",
-    // "/admin",
-    // "/admin/dashboard",
-    // "/admin/users",
-    // "/admin/courses",
-    // "/admin/categories",
-    // "/admin/tags",
-    // "/admin/orders",
+    "/Admin",
+    "/Admin/Home",
+    "/Admin/Courses_Lists",
+    "/Admin/All_Courses",
+    "/Admin/Music_Production",
+    "/Admin/SongWriting",
+    "/Admin/Advanced_Composition",
+    "/Admin/Basic_Music",
     "/contact",
     "/courses/1",
     "/courses/2",
@@ -98,6 +46,10 @@ function Navbar({ className }: { className?: string }) {
     "/courses/10",
     "/courses/11",
     "/courses/12",
+    "/Songwriting",
+    "/Music_Production",
+    "/Advanced_Composition",
+    "/basic_music",
     "/login",
     "/signup",
     "/Account_verification_email",
@@ -147,13 +99,19 @@ function Navbar({ className }: { className?: string }) {
           showOnlyIconOnSmallScreen={true}
         >
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/courses">All Courses</HoveredLink>
-            <HoveredLink href="/basic_music">Basic Music Theory</HoveredLink>
-            <HoveredLink href="/Advanced_Composition">
+            <HoveredLink href="/NavComponent/courses">All Courses</HoveredLink>
+            <HoveredLink href="/NavComponent/basic_music">
+              Basic Music Theory
+            </HoveredLink>
+            <HoveredLink href="/NavComponent/Advanced_Composition">
               Advanced Composition
             </HoveredLink>
-            <HoveredLink href="/Songwriting">Songwriting</HoveredLink>
-            <HoveredLink href="/Music_Production">Music Production</HoveredLink>
+            <HoveredLink href="/NavComponent/Songwriting">
+              Songwriting
+            </HoveredLink>
+            <HoveredLink href="/NavComponent/Music_Production">
+              Music Production
+            </HoveredLink>
           </div>
         </MenuItem>
         <Link href="/contact">
