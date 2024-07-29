@@ -5,7 +5,6 @@ import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AdminSlider from "@/app/Admin/AdminSlider/page";
-import Pagination from "@/app/Admin/Pagination/page";
 
 import {
   FaSearch,
@@ -1101,12 +1100,37 @@ const Admin = () => {
               </div>
 
               {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                productsPerPage={productsPerPage}
-                totalProducts={filteredProducts.length}
-                paginate={paginate}
-              />
+              <div className="flex justify-between mt-4">
+                <div>
+                  Showing {indexOfFirstProduct + 1}-
+                  {Math.min(indexOfLastProduct, filteredProducts.length)} of{" "}
+                  {filteredProducts.length} products
+                </div>
+                <div className="flex space-x-2">
+                  <button
+                    className={`bg-gray-400 text-white px-2 py-1 rounded flex items-center ${
+                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                    }`}
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    <FaChevronLeft className="mr-2" />
+                    Prev
+                  </button>
+                  <button
+                    className={`bg-gray-400 text-white px-2 py-1 rounded flex items-center ${
+                      indexOfLastProduct >= filteredProducts.length
+                        ? "pointer-events-none opacity-50"
+                        : ""
+                    }`}
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={indexOfLastProduct >= filteredProducts.length}
+                  >
+                    Next
+                    <FaChevronRight className="ml-2" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </>

@@ -11,11 +11,10 @@ import {
   FaEllipsisH,
   FaEdit,
   FaTrashAlt,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
-
-// import { FaSearch, FaPlus, FaUser } from "react-icons/fa";
 import AdminSlider from "@/app/Admin/AdminSlider/page";
-import Pagination from "@/app/Admin/Pagination/page";
 
 const AllCourses = () => {
   const [allCourses, setAllCourses] = useState([]);
@@ -48,6 +47,7 @@ const AllCourses = () => {
 
     fetchCourses();
   }, []);
+
   const [showAddProduct, setShowAddProduct] = useState(false);
 
   const openAddProductForm = () => {
@@ -163,12 +163,9 @@ const AllCourses = () => {
   // State and handlers for product actions and filtering
   const [showActions, setShowActions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
-  const [filter, setFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (e) => setSearchQuery(e.target.value);
-  const productsPerPage = 5;
 
   const handleEllipsisClick = (index) => {
     if (activeIndex === index) {
@@ -180,22 +177,27 @@ const AllCourses = () => {
     }
   };
 
-  const filteredCourses = allCourses
-    .filter((course) => {
+  const [filter, setFilter] = useState("All");
+  const filteredProducts = (allCourses || []) // Ensure allCourses is an array
+    .filter((product) => {
+      // Check if filter is "All" or if product status matches the filter
       if (filter === "All") return true;
-      return course.status === filter;
+      return product.status === filter;
     })
-    .filter((course) => {
-      const title = course.title || "";
+    .filter((product) => {
+      const title = product.title || ""; // Fallback to empty string if title is undefined
       return title.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
   // Pagination logic
-  const indexOfLastCourse = currentPage * productsPerPage;
-  const indexOfFirstCourse = indexOfLastCourse - productsPerPage;
-  const currentCourses = filteredCourses.slice(
-    indexOfFirstCourse,
-    indexOfLastCourse
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
   );
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -547,7 +549,7 @@ const AllCourses = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {currentCourses.map((course, index) => (
+                  {currentProducts.map((course, index) => (
                     <tr key={course._id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         <Image
@@ -940,12 +942,37 @@ const AllCourses = () => {
               </table>
             </div>
           </div>
-          <Pagination
-            currentPage={currentPage}
-            productsPerPage={productsPerPage}
-            totalProducts={filteredCourses.length}
-            paginate={paginate}
-          />
+          <div className="flex justify-between mt-4">
+            <div>
+              Showing {indexOfFirstProduct + 1}-
+              {Math.min(indexOfLastProduct, filteredProducts.length)} of{" "}
+              {filteredProducts.length} products
+            </div>
+            <div className="flex space-x-2">
+              <button
+                className={`bg-gray-400 text-white px-2 py-1 rounded flex items-center ${
+                  currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                }`}
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                <FaChevronLeft className="mr-2" />
+                Prev
+              </button>
+              <button
+                className={`bg-gray-400 text-white px-2 py-1 rounded flex items-center ${
+                  indexOfLastProduct >= filteredProducts.length
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }`}
+                onClick={() => paginate(currentPage + 1)}
+                disabled={indexOfLastProduct >= filteredProducts.length}
+              >
+                Next
+                <FaChevronRight className="ml-2" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
