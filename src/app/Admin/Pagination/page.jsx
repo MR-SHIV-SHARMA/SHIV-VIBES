@@ -1,5 +1,6 @@
-import React from 'react';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+// src/components/Pagination.jsx
+import React from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Pagination = ({
   currentPage,
@@ -14,7 +15,8 @@ const Pagination = ({
     <div className="flex justify-between mt-4">
       <div>
         Showing {indexOfFirstProduct + 1}-
-        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts} products
+        {Math.min(indexOfLastProduct, totalProducts)} of {totalProducts}{" "}
+        products
       </div>
       <div className="flex space-x-2">
         <button
