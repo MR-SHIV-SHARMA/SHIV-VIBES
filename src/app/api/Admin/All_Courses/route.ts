@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Course from "@/models/Admin/All_Courses";
 import { connect } from "@/dbConfig/dbConfig";
-import url from "url";
 import client from "../../../../client";
 
 // Helper function to handle JSON response
@@ -9,16 +8,14 @@ const jsonResponse = (success: boolean, data: any, status: number) =>
   NextResponse.json({ success, ...data }, { status });
 
 // Helper function to format videos
-const formatVideos = (videos: any) =>
-  Array.isArray(videos)
-    ? videos.map((video: any) => ({
-        title: video.title,
-        duration: video.duration,
-        intro: video.intro,
-        description: video.description,
-        videoUrl: video.videoUrl,
-      }))
-    : [];
+const formatVideos = (videos: any[]) =>
+  videos?.map((video) => ({
+    title: video.title,
+    duration: video.duration,
+    intro: video.intro,
+    description: video.description,
+    videoUrl: video.videoUrl,
+  })) || [];
 
 // Cache key constants
 const CACHE_KEY = {
@@ -41,7 +38,7 @@ async function updateCache(id?: string) {
     const course = await Course.findById(id);
     if (course) {
       await client.set(CACHE_KEY.COURSE(id), JSON.stringify(course));
-      await client.expire(CACHE_KEY.COURSE(id), 3600);
+      await client.expire(CACHE_KEY.COURSE(id), 3600); // 1 hour
     }
   }
   await client.del(CACHE_KEY.ALL_COURSES);
@@ -100,8 +97,8 @@ export async function GET(request: NextRequest) {
   await connect();
 
   try {
-    const { query } = url.parse(request.url, true);
-    const id = query.id as string;
+    const urlObj = new URL(request.url);
+    const id = urlObj.searchParams.get('id');
 
     if (id) {
       const cachedCourse = await fetchCourseFromCache(id);
@@ -124,7 +121,7 @@ export async function GET(request: NextRequest) {
 
       const courses = await Course.find();
       await client.set(CACHE_KEY.ALL_COURSES, JSON.stringify(courses));
-      await client.expire(CACHE_KEY.ALL_COURSES, 3600);
+      await client.expire(CACHE_KEY.ALL_COURSES, 3600); // 1 hour
 
       return jsonResponse(true, { data: courses }, 200);
     }
@@ -137,8 +134,8 @@ export async function DELETE(request: NextRequest) {
   await connect();
 
   try {
-    const { query } = url.parse(request.url, true);
-    const id = query.id as string;
+    const urlObj = new URL(request.url);
+    const id = urlObj.searchParams.get('id');
 
     if (!id) {
       return jsonResponse(false, { error: "Missing course ID" }, 400);
@@ -162,19 +159,14 @@ export async function PUT(request: NextRequest) {
   await connect();
 
   try {
-    const { query } = url.parse(request.url, true);
-    const id = query.id as string;
+    const urlObj = new URL(request.url);
+    const id = urlObj.searchParams.get('id');
 
     if (!id) {
       return jsonResponse(false, { error: "Missing course ID" }, 400);
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch (error) {
-      return jsonResponse(false, { error: "Invalid JSON body" }, 400);
-    }
+    const body = await request.json();
 
     const {
       title,
@@ -194,15 +186,7 @@ export async function PUT(request: NextRequest) {
       createdAt,
     } = body;
 
-    if (
-      !title ||
-      !slug ||
-      !description ||
-      !price ||
-      !instructor ||
-      !thumbnail ||
-      !videoUrl
-    ) {
+    if (!title || !slug || !description || !price || !instructor || !thumbnail || !videoUrl) {
       return jsonResponse(false, { error: "Missing required fields" }, 400);
     }
 
@@ -233,11 +217,7 @@ export async function PUT(request: NextRequest) {
     }
 
     await updateCache(id);
-    return jsonResponse(
-      true,
-      { message: "Course updated successfully", data: updatedCourse },
-      200
-    );
+    return jsonResponse(true, { message: "Course updated successfully", data: updatedCourse }, 200);
   } catch (error: any) {
     return jsonResponse(false, { error: error.message }, 400);
   }
