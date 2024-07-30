@@ -1,9 +1,8 @@
-// next.config.js
-
-module.exports = {
+export default {
     // Other Next.js configurations
     pageExtensions: ['ts', 'tsx', 'js', 'jsx'], // If you have custom extensions
     images: {
-        domains: ['images.unsplash.com', 'aceternity.com', 'images.pexels.com', "example.com"],
+      domains: ['images.unsplash.com', 'aceternity.com', 'images.pexels.com', "example.com"],
     },
-};
+  };
+  

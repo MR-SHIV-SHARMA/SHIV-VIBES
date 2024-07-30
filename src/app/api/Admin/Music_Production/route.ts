@@ -1,20 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import MusicProduction from "@/models/Admin/Music_Production";
 import { connect } from "@/dbConfig/dbConfig";
+import { client, connectRedis } from "@/client"; // Import Redis client utilities
 import url from "url";
-import client from "../../../../client"; // Import Redis client
+
+// Helper function to handle JSON responses
+const jsonResponse = (success: boolean, data: any, status: number) =>
+  NextResponse.json({ success, ...data }, { status });
+
+// Helper function to parse JSON body
+async function parseJsonBody(request: NextRequest) {
+  try {
+    return await request.json();
+  } catch (error) {
+    console.error("Error parsing JSON body:", error);
+    throw new Error("Invalid JSON body");
+  }
+}
 
 export async function POST(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
-    const { title, status, content, image } = await request.json();
+    const body = await parseJsonBody(request);
+
+    const { title, status, content, image } = body;
 
     if (!title || !status || !content || !image) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing required fields" }, 400);
     }
 
     const newCourse = new MusicProduction({
@@ -26,23 +40,18 @@ export async function POST(request: NextRequest) {
 
     await newCourse.save();
 
-    // Optionally cache the newly created course in Redis
+    // Cache the newly created course in Redis
     await client.set(`course:${newCourse._id}`, JSON.stringify(newCourse));
 
-    return NextResponse.json(
-      { success: true, data: newCourse },
-      { status: 201 }
-    );
+    return jsonResponse(true, { data: newCourse }, 201);
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function GET(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { query } = url.parse(request.url, true);
@@ -52,113 +61,73 @@ export async function GET(request: NextRequest) {
       // Check Redis cache first
       const cachedCourse = await client.get(`course:${id}`);
       if (cachedCourse) {
-        return NextResponse.json(
-          { success: true, data: JSON.parse(cachedCourse) },
-          { status: 200 }
-        );
+        return jsonResponse(true, { data: JSON.parse(cachedCourse) }, 200);
       }
 
       const course = await MusicProduction.findById(id);
 
       if (!course) {
-        return NextResponse.json(
-          { success: false, error: "Course not found" },
-          { status: 404 }
-        );
+        return jsonResponse(false, { error: "Course not found" }, 404);
       }
 
       // Cache the fetched course in Redis
       await client.set(`course:${id}`, JSON.stringify(course));
 
-      return NextResponse.json(
-        { success: true, data: course },
-        { status: 200 }
-      );
+      return jsonResponse(true, { data: course }, 200);
     } else {
       const courses = await MusicProduction.find();
-
-      return NextResponse.json(
-        { success: true, data: courses },
-        { status: 200 }
-      );
+      return jsonResponse(true, { data: courses }, 200);
     }
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { query } = url.parse(request.url, true);
     const id = query.id as string;
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing course ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing course ID" }, 400);
     }
 
     const deletedCourse = await MusicProduction.findByIdAndDelete(id);
 
     if (!deletedCourse) {
-      return NextResponse.json(
-        { success: false, error: "Course not found" },
-        { status: 404 }
-      );
+      return jsonResponse(false, { error: "Course not found" }, 404);
     }
 
     // Remove the course from Redis cache
     await client.del(`course:${id}`);
 
-    return NextResponse.json(
-      { success: true, message: "Course deleted successfully" },
-      { status: 200 }
-    );
+    return jsonResponse(true, { message: "Course deleted successfully" }, 200);
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function PUT(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { query } = url.parse(request.url, true);
     const id = query.id as string;
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing course ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing course ID" }, 400);
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch (error) {
-      return NextResponse.json(
-        { success: false, error: "Invalid JSON body" },
-        { status: 400 }
-      );
-    }
+    const body = await parseJsonBody(request);
 
     const { title, status, content, image } = body;
 
     if (!title && !status && !content && !image) {
-      return NextResponse.json(
-        { success: false, error: "Missing fields to update" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing fields to update" }, 400);
     }
 
     const updatedCourse = await MusicProduction.findByIdAndUpdate(
@@ -168,27 +137,19 @@ export async function PUT(request: NextRequest) {
     );
 
     if (!updatedCourse) {
-      return NextResponse.json(
-        { success: false, error: "Course not found" },
-        { status: 404 }
-      );
+      return jsonResponse(false, { error: "Course not found" }, 404);
     }
 
     // Update the Redis cache with the updated course
     await client.set(`course:${id}`, JSON.stringify(updatedCourse));
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Course updated successfully",
-        data: updatedCourse,
-      },
-      { status: 200 }
+    return jsonResponse(
+      true,
+      { message: "Course updated successfully", data: updatedCourse },
+      200
     );
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    console.error("Error in PUT request:", error);
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }

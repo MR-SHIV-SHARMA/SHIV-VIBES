@@ -2,6 +2,7 @@
   "name": "shiv-vibes",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -32,6 +33,7 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
     "react-toastify": "^10.0.5",
+    "redis": "^4.7.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
   },

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import Course from "@/models/Admin/All_Courses";
-import { connect } from "@/dbConfig/dbConfig";
-import client from "../../../../client";
+import { NextRequest, NextResponse } from 'next/server';
+import Course from '@/models/Admin/All_Courses';
+import { connect } from '@/dbConfig/dbConfig'; // Import database connection utilities
+import { client, connectRedis } from '@/client'; // Import Redis client utilities
 
 // Helper function to handle JSON response
 const jsonResponse = (success: boolean, data: any, status: number) =>
@@ -24,28 +24,45 @@ const CACHE_KEY = {
 };
 
 async function fetchCourseFromCache(id: string) {
-  const cacheValue = await client.get(CACHE_KEY.COURSE(id));
-  return cacheValue ? JSON.parse(cacheValue) : null;
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    const cacheValue = await client.get(CACHE_KEY.COURSE(id));
+    return cacheValue ? JSON.parse(cacheValue) : null;
+  } catch (error) {
+    console.error("Error fetching course from cache:", error);
+    return null;
+  }
 }
 
 async function fetchAllCoursesFromCache() {
-  const cacheValue = await client.get(CACHE_KEY.ALL_COURSES);
-  return cacheValue ? JSON.parse(cacheValue) : null;
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    const cacheValue = await client.get(CACHE_KEY.ALL_COURSES);
+    return cacheValue ? JSON.parse(cacheValue) : null;
+  } catch (error) {
+    console.error("Error fetching all courses from cache:", error);
+    return null;
+  }
 }
 
 async function updateCache(id?: string) {
-  if (id) {
-    const course = await Course.findById(id);
-    if (course) {
-      await client.set(CACHE_KEY.COURSE(id), JSON.stringify(course));
-      await client.expire(CACHE_KEY.COURSE(id), 3600); // 1 hour
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    if (id) {
+      const course = await Course.findById(id);
+      if (course) {
+        await client.set(CACHE_KEY.COURSE(id), JSON.stringify(course));
+        await client.expire(CACHE_KEY.COURSE(id), 3600); // 1 hour
+      }
     }
+    await client.del(CACHE_KEY.ALL_COURSES);
+  } catch (error) {
+    console.error("Error updating cache:", error);
   }
-  await client.del(CACHE_KEY.ALL_COURSES);
 }
 
 export async function POST(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
     const {
@@ -94,11 +111,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const urlObj = new URL(request.url);
-    const id = urlObj.searchParams.get('id');
+    const id = urlObj.searchParams.get("id");
 
     if (id) {
       const cachedCourse = await fetchCourseFromCache(id);
@@ -120,22 +138,26 @@ export async function GET(request: NextRequest) {
       }
 
       const courses = await Course.find();
+      console.log("Fetched courses from database:", courses); // Debugging log
+
       await client.set(CACHE_KEY.ALL_COURSES, JSON.stringify(courses));
       await client.expire(CACHE_KEY.ALL_COURSES, 3600); // 1 hour
 
       return jsonResponse(true, { data: courses }, 200);
     }
   } catch (error: any) {
+    console.error("Error in GET handler:", error);
     return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const urlObj = new URL(request.url);
-    const id = urlObj.searchParams.get('id');
+    const id = urlObj.searchParams.get("id");
 
     if (!id) {
       return jsonResponse(false, { error: "Missing course ID" }, 400);
@@ -156,11 +178,12 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const urlObj = new URL(request.url);
-    const id = urlObj.searchParams.get('id');
+    const id = urlObj.searchParams.get("id");
 
     if (!id) {
       return jsonResponse(false, { error: "Missing course ID" }, 400);
@@ -186,7 +209,15 @@ export async function PUT(request: NextRequest) {
       createdAt,
     } = body;
 
-    if (!title || !slug || !description || !price || !instructor || !thumbnail || !videoUrl) {
+    if (
+      !title ||
+      !slug ||
+      !description ||
+      !price ||
+      !instructor ||
+      !thumbnail ||
+      !videoUrl
+    ) {
       return jsonResponse(false, { error: "Missing required fields" }, 400);
     }
 
@@ -217,7 +248,11 @@ export async function PUT(request: NextRequest) {
     }
 
     await updateCache(id);
-    return jsonResponse(true, { message: "Course updated successfully", data: updatedCourse }, 200);
+    return jsonResponse(
+      true,
+      { message: "Course updated successfully", data: updatedCourse },
+      200
+    );
   } catch (error: any) {
     return jsonResponse(false, { error: error.message }, 400);
   }

@@ -1,9 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
 import AdvancedComposition from "../../../../models/Admin/Advanced_Composition";
 import { connect } from "@/dbConfig/dbConfig";
+import { client, connectRedis } from "@/client"; // Import Redis client utilities
+
+// Cache key constants
+const CACHE_KEY = {
+  COMPOSITION: (id: string) => `composition_${id}`,
+  ALL_COMPOSITIONS: "all_compositions",
+};
+
+// Helper function to handle JSON response
+const jsonResponse = (success: boolean, data: any, status: number) =>
+  NextResponse.json({ success, ...data }, { status });
+
+// Helper function to fetch composition from cache
+async function fetchCompositionFromCache(id: string) {
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    const cacheValue = await client.get(CACHE_KEY.COMPOSITION(id));
+    return cacheValue ? JSON.parse(cacheValue) : null;
+  } catch (error) {
+    console.error("Error fetching composition from cache:", error);
+    return null;
+  }
+}
+
+// Helper function to fetch all compositions from cache
+async function fetchAllCompositionsFromCache() {
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    const cacheValue = await client.get(CACHE_KEY.ALL_COMPOSITIONS);
+    return cacheValue ? JSON.parse(cacheValue) : null;
+  } catch (error) {
+    console.error("Error fetching all compositions from cache:", error);
+    return null;
+  }
+}
+
+// Helper function to update cache
+async function updateCache(id?: string) {
+  try {
+    await connectRedis(); // Ensure Redis is connected
+    if (id) {
+      const composition = await AdvancedComposition.findById(id);
+      if (composition) {
+        await client.set(
+          CACHE_KEY.COMPOSITION(id),
+          JSON.stringify(composition)
+        );
+        await client.expire(CACHE_KEY.COMPOSITION(id), 3600); // 1 hour
+      }
+    }
+    await client.del(CACHE_KEY.ALL_COMPOSITIONS);
+  } catch (error) {
+    console.error("Error updating cache:", error);
+  }
+}
 
 export async function POST(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
     const {
@@ -39,105 +94,98 @@ export async function POST(request: NextRequest) {
     });
 
     await newComposition.save();
+    await updateCache(newComposition._id.toString());
 
-    return NextResponse.json(
-      { success: true, data: newComposition },
-      { status: 201 }
-    );
+    return jsonResponse(true, { data: newComposition }, 201);
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function GET(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const parsedUrl = new URL(request.url);
     const id = parsedUrl.searchParams.get("id");
 
     if (id) {
-      // Fetch the composition from the database
-      const composition = await AdvancedComposition.findById(id);
-
-      if (!composition) {
-        return NextResponse.json(
-          { success: false, error: "Composition not found" },
-          { status: 404 }
-        );
+      const cachedComposition = await fetchCompositionFromCache(id);
+      if (cachedComposition) {
+        return jsonResponse(true, { data: cachedComposition }, 200);
       }
 
-      return NextResponse.json(
-        { success: true, data: composition },
-        { status: 200 }
-      );
-    } else {
-      // Fetch all compositions from the database
-      const compositions = await AdvancedComposition.find();
+      const composition = await AdvancedComposition.findById(id);
+      if (!composition) {
+        return jsonResponse(false, { error: "Composition not found" }, 404);
+      }
 
-      return NextResponse.json(
-        { success: true, data: compositions },
-        { status: 200 }
+      await updateCache(id);
+      return jsonResponse(true, { data: composition }, 200);
+    } else {
+      const cachedCompositions = await fetchAllCompositionsFromCache();
+      if (cachedCompositions) {
+        return jsonResponse(true, { data: cachedCompositions }, 200);
+      }
+
+      const compositions = await AdvancedComposition.find();
+      console.log("Fetched compositions from database:", compositions); // Debugging log
+
+      await client.set(
+        CACHE_KEY.ALL_COMPOSITIONS,
+        JSON.stringify(compositions)
       );
+      await client.expire(CACHE_KEY.ALL_COMPOSITIONS, 3600); // 1 hour
+
+      return jsonResponse(true, { data: compositions }, 200);
     }
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    console.error("Error in GET handler:", error);
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const parsedUrl = new URL(request.url);
     const id = parsedUrl.searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing composition ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing composition ID" }, 400);
     }
 
     const deletedComposition = await AdvancedComposition.findByIdAndDelete(id);
-
     if (!deletedComposition) {
-      return NextResponse.json(
-        { success: false, error: "Composition not found" },
-        { status: 404 }
-      );
+      return jsonResponse(false, { error: "Composition not found" }, 404);
     }
 
-    return NextResponse.json(
-      { success: true, message: "Composition deleted successfully" },
-      { status: 200 }
+    await client.del(CACHE_KEY.COMPOSITION(id));
+    await client.del(CACHE_KEY.ALL_COMPOSITIONS);
+
+    return jsonResponse(
+      true,
+      { message: "Composition deleted successfully" },
+      200
     );
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
 
 export async function PUT(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
 
   try {
+    await connectRedis(); // Ensure Redis is connected
     const parsedUrl = new URL(request.url);
     const id = parsedUrl.searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing composition ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing composition ID" }, 400);
     }
 
     const body = await request.json();
@@ -175,10 +223,7 @@ export async function PUT(request: NextRequest) {
       !Technology_in_Composition ||
       !Ethical_Considerations
     ) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing required fields" }, 400);
     }
 
     const updatedComposition = await AdvancedComposition.findByIdAndUpdate(
@@ -202,25 +247,17 @@ export async function PUT(request: NextRequest) {
     );
 
     if (!updatedComposition) {
-      return NextResponse.json(
-        { success: false, error: "Composition not found" },
-        { status: 404 }
-      );
+      return jsonResponse(false, { error: "Composition not found" }, 404);
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Composition updated successfully",
-        data: updatedComposition,
-      },
-      { status: 200 }
+    await updateCache(id);
+    return jsonResponse(
+      true,
+      { message: "Composition updated successfully", data: updatedComposition },
+      200
     );
   } catch (error: any) {
     console.error("Error in PUT request:", error);
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 400 }
-    );
+    return jsonResponse(false, { error: error.message }, 400);
   }
 }
