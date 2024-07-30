@@ -1,23 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import Section from "@/models/Admin/SectionModel";
 import { connect } from "@/dbConfig/dbConfig";
-import client from "../../../../client";
+import { client, connectRedis } from "@/client"; // Import Redis client utilities
+
+// Helper function to handle JSON responses
+const jsonResponse = (success: boolean, data: any, status: number) =>
+  NextResponse.json({ success, ...data }, { status });
+
+// Helper function to parse JSON body
+async function parseJsonBody(request: NextRequest) {
+  try {
+    return await request.json();
+  } catch (error) {
+    console.error("Error parsing JSON body:", error);
+    throw new Error("Invalid JSON body");
+  }
+}
 
 export async function POST(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
-    const { title, status, content, image, examples, tips } =
-      await request.json();
+    const body = await parseJsonBody(request);
+    const { title, status, content, image, examples, tips } = body;
 
     if (!title) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing required fields" }, 400);
     }
 
-    const newCourse = new Section({
+    const newSection = new Section({
       title,
       status,
       content,
@@ -26,163 +38,117 @@ export async function POST(request: NextRequest) {
       tips,
     });
 
-    await newCourse.save();
-    await client.set(`course:${newCourse._id}`, JSON.stringify(newCourse));
+    await newSection.save();
+    await client.set(`section:${newSection._id}`, JSON.stringify(newSection));
 
-    return NextResponse.json(
-      { success: true, data: newCourse },
-      { status: 201 }
-    );
+    return jsonResponse(true, { data: newSection }, 201);
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    console.error("Error in POST request:", error);
+    return jsonResponse(false, { error: error.message }, 500);
   }
 }
 
 export async function GET(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (id) {
-      const cachedCourse = await client.get(`course:${id}`);
-      if (cachedCourse) {
-        return NextResponse.json(
-          { success: true, data: JSON.parse(cachedCourse) },
-          { status: 200 }
-        );
+      // Check Redis cache first
+      const cachedSection = await client.get(`section:${id}`);
+      if (cachedSection) {
+        return jsonResponse(true, { data: JSON.parse(cachedSection) }, 200);
       }
 
-      const course = await Section.findById(id);
-      if (!course) {
-        return NextResponse.json(
-          { success: false, error: "Course not found" },
-          { status: 404 }
-        );
+      const section = await Section.findById(id);
+      if (!section) {
+        return jsonResponse(false, { error: "Section not found" }, 404);
       }
 
-      await client.set(`course:${id}`, JSON.stringify(course));
+      // Cache the fetched section in Redis
+      await client.set(`section:${id}`, JSON.stringify(section));
 
-      return NextResponse.json(
-        { success: true, data: course },
-        { status: 200 }
-      );
+      return jsonResponse(true, { data: section }, 200);
     } else {
-      const courses = await Section.find();
-      return NextResponse.json(
-        { success: true, data: courses },
-        { status: 200 }
-      );
+      const sections = await Section.find();
+      return jsonResponse(true, { data: sections }, 200);
     }
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    console.error("Error in GET request:", error);
+    return jsonResponse(false, { error: error.message }, 500);
   }
 }
 
 export async function DELETE(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing course ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing section ID" }, 400);
     }
 
-    const deletedCourse = await Section.findByIdAndDelete(id);
-    if (!deletedCourse) {
-      return NextResponse.json(
-        { success: false, error: "Course not found" },
-        { status: 404 }
-      );
+    const deletedSection = await Section.findByIdAndDelete(id);
+    if (!deletedSection) {
+      return jsonResponse(false, { error: "Section not found" }, 404);
     }
 
-    // await client.del(`course:${id}`);
-    await client.del(`course:${id}`);
+    // Remove the section from Redis cache
+    await client.del(`section:${id}`);
 
-    return NextResponse.json(
-      { success: true, message: "Course deleted successfully" },
-      { status: 200 }
-    );
+    return jsonResponse(true, { message: "Section deleted successfully" }, 200);
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    console.error("Error in DELETE request:", error);
+    return jsonResponse(false, { error: error.message }, 500);
   }
 }
 
 export async function PUT(request: NextRequest) {
-  await connect();
+  await connect(); // Ensure database is connected
+  await connectRedis(); // Ensure Redis is connected
 
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { success: false, error: "Missing course ID" },
-        { status: 400 }
-      );
+      return jsonResponse(false, { error: "Missing section ID" }, 400);
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch (error) {
-      return NextResponse.json(
-        { success: false, error: "Invalid JSON body" },
-        { status: 400 }
-      );
-    }
+    const body = await parseJsonBody(request);
 
     const { title, status, content, image, examples, tips } = body;
 
-    if (!title && !status && !examples && !content && !image && !tips) {
-      return NextResponse.json(
-        { success: false, error: "Missing fields to update" },
-        { status: 400 }
-      );
+    if (!title && !status && !content && !image && !examples && !tips) {
+      return jsonResponse(false, { error: "Missing fields to update" }, 400);
     }
 
-    const updatedCourse = await Section.findByIdAndUpdate(
+    const updatedSection = await Section.findByIdAndUpdate(
       id,
       { title, status, content, image, examples, tips },
       { new: true, runValidators: true }
     );
 
-    if (!updatedCourse) {
-      return NextResponse.json(
-        { success: false, error: "Course not found" },
-        { status: 404 }
-      );
+    if (!updatedSection) {
+      return jsonResponse(false, { error: "Section not found" }, 404);
     }
 
-    await client.set(`course:${id}`, JSON.stringify(updatedCourse));
+    // Update the Redis cache with the updated section
+    await client.set(`section:${id}`, JSON.stringify(updatedSection));
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Course updated successfully",
-        data: updatedCourse,
-      },
-      { status: 200 }
+    return jsonResponse(
+      true,
+      { message: "Section updated successfully", data: updatedSection },
+      200
     );
   } catch (error: any) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    console.error("Error in PUT request:", error);
+    return jsonResponse(false, { error: error.message }, 500);
   }
 }

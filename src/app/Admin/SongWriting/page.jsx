@@ -34,9 +34,7 @@ const AllCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get(
-          `/api/Admin/Songwriting`
-        );
+        const response = await axios.get(`/api/Admin/Songwriting`);
         setAllCourses(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -132,13 +130,9 @@ const AllCourses = () => {
 
   const addCourse = async () => {
     try {
-      const response = await axios.post(
-        "/api/Admin/Songwriting",
-        newCourse,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post("/api/Admin/Songwriting", newCourse, {
+        headers: { "Content-Type": "application/json" },
+      });
       toast.success("Course added successfully!");
       setAllCourses([...allCourses, response.data.data]);
       setNewCourse({
