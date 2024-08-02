@@ -56,7 +56,7 @@ const Profile = () => {
         const userId = localStorage.getItem("userId");
         if (userId) {
           const response = await axios.get(
-            `http://localhost:3000/api/users/profile?userId=${userId}`
+            `/api/users/profile?userId=${userId}`
           );
           if (response.data.data) {
             setProfile(response.data.data);
@@ -97,7 +97,7 @@ const Profile = () => {
 
     const config = {
       method: "POST",
-      url: `http://localhost:3000/api/users/profile`,
+      url: `/api/users/profile`,
       headers: {
         "Content-Type": "application/json",
       },
@@ -126,7 +126,7 @@ const Profile = () => {
 
     const config = {
       method: "PUT",
-      url: `http://localhost:3000/api/users/profile?userId=${userId}`,
+      url: `/api/users/profile?userId=${userId}`,
       headers: {
         "Content-Type": "application/json",
       },
