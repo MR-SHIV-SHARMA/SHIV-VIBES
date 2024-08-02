@@ -1,29 +1,26 @@
 import mongoose, { Schema } from "mongoose";
 
-const SocialMediaLinkSchema = new Schema({
-  icon: { type: String, required: true },
-  url: { type: String, required: true },
-  displayText: { type: String, required: true },
-});
-
 const ProfileSchema = new Schema({
   userId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-  profile: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  city: { type: String, required: true },
-  hobbies: { type: String, required: true },
-  studentId: { type: String, required: true },
-  isDarkMode: { type: Boolean, required: true },
-  theme: { type: String, required: true },
-  genresStyles: { type: String, required: true },
-  performanceExperience: { type: String, required: true },
-  achievementsAwards: { type: String, required: true },
-  musicEducationHistory: { type: String, required: true },
-  socialMediaLinks: { type: [SocialMediaLinkSchema], required: true },
-  bio: { type: String, required: true },
+  username: { type: String, required: false, unique: true },
+  profile: { type: String, required: false },
+  firstName: { type: String, required: false },
+  lastName: { type: String, required: false },
+  email: { type: String, required: false, unique: true },
+  phone: { type: String, required: false },
+  city: { type: String, required: false },
+  hobbies: { type: String, required: false },
+  studentId: { type: String, required: false },
+  isDarkMode: { type: Boolean, required: false },
+  theme: { type: String, required: false },
+  genresStyles: { type: String, required: false },
+  performanceExperience: { type: String, required: false },
+  achievementsAwards: { type: String, required: false },
+  musicEducationHistory: { type: String, required: false },
+  SocialMediaLinkForInstagram: { type: String, required: false },
+  SocialMediaLinkForYoutube: { type: String, required: false },
+  SocialMediaLinkForLinkdin: { type: String, required: false },
+  bio: { type: String, required: false },
 });
 
 const Profile =

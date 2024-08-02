@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/utils/cn";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function LoginPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ function LoginPage() {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false); // New state for showing password
 
   const onLogin = async (event: any) => {
     event.preventDefault();
@@ -26,8 +28,18 @@ function LoginPage() {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
-      console.log("Login success", response.data);
+      console.log("Login success", response.data); // Log the entire response object
       toast.success("Login success");
+
+      // Ensure the response contains the userId property
+      const userId = response.data.userId;
+      if (userId) {
+        localStorage.setItem("userId", userId);
+        console.log("User ID saved to localStorage:", userId);
+      } else {
+        console.error("User ID not found in response:", response.data);
+      }
+
       // Reload the page immediately after login
       window.location.reload();
     } catch (error: any) {
@@ -54,12 +66,11 @@ function LoginPage() {
     } else {
       setButtonDisabled(true);
     }
-    localStorage.setItem('loggedInEmail', user.email);
   }, [user]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black md:bg-transparent">
-      <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input flex flex-col items-center justify-center bg-black md:bg-transparent">
+    <div className="flex items-center justify-center min-h-screen bg-transparent bg-gray-600">
+      <div className="max-w-md w-full mx-auto bg-black rounded-none md:rounded-2xl p-4 md:p-8 shadow-input flex flex-col items-center justify-center md:bg-black">
         <h2 className="font-bold text-xl mt-4 text-neutral-800 dark:text-neutral-200">
           Welcome to SHIV-WEB
         </h2>
@@ -82,16 +93,26 @@ function LoginPage() {
               className="dark:text-white"
             />
           </LabelInputContainer>
-          <LabelInputContainer className="mb-4">
+          <LabelInputContainer className="mb-4 relative">
+            {" "}
+            {/* Make the container relative for positioning */}
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               value={user.password}
               onChange={(e) => setUser({ ...user, password: e.target.value })}
               placeholder="••••••••"
-              type="password"
-              className=" dark:text-white"
+              type={showPassword ? "text" : "password"} // Toggle between text and password
+              className="dark:text-white pr-10" // Add padding to the right for the icon
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 text-gray-500 transform -translate-y-1/2" // Position the icon
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}{" "}
+              {/* Toggle the icon */}
+            </button>
           </LabelInputContainer>
 
           <button

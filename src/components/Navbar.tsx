@@ -66,6 +66,7 @@ function Navbar({ className }: { className?: string }) {
   const logout = async () => {
     try {
       await axios.post("/api/users/logout");
+      localStorage.removeItem("userId"); // Remove userId from localStorage
       toast.success("Logout successful");
       router.push("/login");
     } catch (error: any) {

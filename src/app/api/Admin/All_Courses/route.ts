@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Course from '@/models/Admin/All_Courses';
-import { connect } from '@/dbConfig/dbConfig'; // Import database connection utilities
-import { client, connectRedis } from '@/client'; // Import Redis client utilities
+import { NextRequest, NextResponse } from "next/server";
+import Course from "@/models/Admin/All_Courses";
+import { connect } from "@/dbConfig/dbConfig"; // Import database connection utilities
+import { client, connectRedis } from "@/client"; // Import Redis client utilities
 
 // Helper function to handle JSON response
 const jsonResponse = (success: boolean, data: any, status: number) =>
