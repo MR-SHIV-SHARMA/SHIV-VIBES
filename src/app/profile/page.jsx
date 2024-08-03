@@ -154,7 +154,7 @@ const Profile = () => {
         </div>
 
         <div className="bg-white rounded-lg flex-1 pl-16 flex flex-col items-center justify-end">
-          <div className="bg-customBeige pt-6 pl-12 relative flex flex-col items-start mt-10 w-full max-w-4xl">
+          <div className="bg-customBeige pt-6 pl-12 relative flex flex-col items-start mt-10 text-black w-full max-w-4xl">
             <h3 className="text-4xl font-serif pl-16 absolute -top-5">
               User Profile
             </h3>
