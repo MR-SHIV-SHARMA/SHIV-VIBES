@@ -51,3 +51,37 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function GET(request: NextRequest) {
+  try {
+    // Extract query parameters from the URL
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+
+    // Check if userId is provided
+    if (!userId) {
+      return NextResponse.json(
+        { error: "UserId must be provided" },
+        { status: 400 }
+      );
+    }
+
+    // Build query object
+    const query = { _id: userId };
+
+    // Find user in the database
+    const user = await User.findOne(query).select("-password"); // Exclude password from response
+
+    // Check if user is found
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ user }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

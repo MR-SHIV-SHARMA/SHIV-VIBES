@@ -4,7 +4,6 @@ import User from "@/models/users/user.models";
 import Profile from "@/models/users/profile_models";
 import { client as redisClient, connectRedis } from "@/client"; // Import Redis client utilities
 
-// Ensure Redis connection
 const CACHE_KEY = {
   PROFILE: (id: string) => `profile:${id}`,
 };
@@ -33,7 +32,6 @@ async function fetchProfileFromCache(id: string) {
   }
 }
 
-// Handle POST request to create a new profile
 export async function POST(request: NextRequest) {
   await connect(); // Connect to the database
 
@@ -41,25 +39,22 @@ export async function POST(request: NextRequest) {
     const body = await request.json(); // Parse the JSON data from the request body
     const {
       userId,
-      username,
       profile,
+      birthday,
       firstName,
       lastName,
-      email,
-      phone, // Optional
-      city, // Optional
-      hobbies, // Optional
-      studentId, // Optional
-      isDarkMode, // Optional
-      theme, // Optional
-      genresStyles, // Optional
-      performanceExperience, // Optional
-      achievementsAwards, // Optional
-      musicEducationHistory, // Optional
-      SocialMediaLinkForInstagram, // Optional
-      SocialMediaLinkForYoutube, // Optional
-      SocialMediaLinkForLinkdin, // Optional
-      bio, // Optional
+      phone,
+      city,
+      hobbies,
+      studentId,
+      genresStyles,
+      performanceExperience,
+      achievementsAwards,
+      musicEducationHistory,
+      SocialMediaLinkForInstagram,
+      SocialMediaLinkForYoutube,
+      SocialMediaLinkForLinkdin,
+      bio,
     } = body;
 
     // Check required fields
@@ -78,35 +73,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if username or email already exists
-    const existingProfile = await Profile.findOne({
-      $or: [{ username }, { email }],
-    });
-    if (existingProfile) {
-      const errors = [];
-      if (existingProfile.username === username)
-        errors.push("Username already exists");
-      if (existingProfile.email === email) errors.push("Email already exists");
-      return NextResponse.json(
-        { success: false, error: errors.join(", ") },
-        { status: 400 }
-      );
-    }
-
     // Create a new profile with the provided data
     const newProfile = new Profile({
       userId: user._id,
-      username,
       profile,
       firstName,
+      birthday,
       lastName,
-      email,
       phone,
       city,
       hobbies,
       studentId,
-      isDarkMode,
-      theme,
       genresStyles,
       performanceExperience,
       achievementsAwards,
@@ -139,7 +116,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Handle PUT request to update an existing profile
 export async function PUT(request: NextRequest) {
   await connect(); // Connect to the database
 
@@ -147,25 +123,22 @@ export async function PUT(request: NextRequest) {
     const body = await request.json(); // Parse the JSON data from the request body
     const {
       userId,
-      username,
       profile,
       firstName,
+      birthday,
       lastName,
-      email,
-      phone, // Optional
-      city, // Optional
-      hobbies, // Optional
-      studentId, // Optional
-      isDarkMode, // Optional
-      theme, // Optional
-      genresStyles, // Optional
-      performanceExperience, // Optional
-      achievementsAwards, // Optional
-      musicEducationHistory, // Optional
-      SocialMediaLinkForInstagram, // Optional
-      SocialMediaLinkForYoutube, // Optional
-      SocialMediaLinkForLinkdin, // Optional
-      bio, // Optional
+      phone,
+      city,
+      hobbies,
+      studentId,
+      genresStyles,
+      performanceExperience,
+      achievementsAwards,
+      musicEducationHistory,
+      SocialMediaLinkForInstagram,
+      SocialMediaLinkForYoutube,
+      SocialMediaLinkForLinkdin,
+      bio,
     } = body;
 
     // Check required fields
@@ -185,37 +158,18 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Check if username or email already exists for another profile
-    const existingProfile = await Profile.findOne({
-      $and: [{ _id: { $ne: user._id } }, { $or: [{ username }, { email }] }],
-    });
-
-    if (existingProfile) {
-      const errors = [];
-      if (existingProfile.username === username)
-        errors.push("Username already exists");
-      if (existingProfile.email === email) errors.push("Email already exists");
-      return NextResponse.json(
-        { success: false, error: errors.join(", ") },
-        { status: 400 }
-      );
-    }
-
     // Find and update the existing profile by user ID
     const updatedProfile = await Profile.findOneAndUpdate(
       { userId: user._id },
       {
-        username,
         profile,
         firstName,
         lastName,
-        email,
+        birthday,
         phone,
         city,
         hobbies,
         studentId,
-        isDarkMode,
-        theme,
         genresStyles,
         performanceExperience,
         achievementsAwards,
@@ -259,7 +213,6 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// Handle GET request to fetch a profile by user ID
 export async function GET(req: NextRequest) {
   await connect(); // Connect to the database
 
@@ -303,11 +256,16 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    const profileData = profile.toObject(); // Convert profile to plain object
+
     // Cache the retrieved profile
-    await redisClient.set(CACHE_KEY.PROFILE(userId), JSON.stringify(profile));
+    await redisClient.set(
+      CACHE_KEY.PROFILE(userId),
+      JSON.stringify(profileData)
+    );
 
     console.log("Profile retrieved successfully");
-    return NextResponse.json({ success: true, data: profile });
+    return NextResponse.json({ success: true, data: profileData });
   } catch (error: any) {
     console.error("Error fetching profile:", error.message);
     return NextResponse.json(
