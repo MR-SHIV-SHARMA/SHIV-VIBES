@@ -2,17 +2,14 @@ import mongoose, { Schema } from "mongoose";
 
 const ProfileSchema = new Schema({
   userId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-  username: { type: String, required: false, unique: true },
   profile: { type: String, required: false },
   firstName: { type: String, required: false },
+  birthday: { type: String, required: true }, // Ensure this line is present
   lastName: { type: String, required: false },
-  email: { type: String, required: false, unique: true },
   phone: { type: String, required: false },
   city: { type: String, required: false },
   hobbies: { type: String, required: false },
   studentId: { type: String, required: false },
-  isDarkMode: { type: Boolean, required: false },
-  theme: { type: String, required: false },
   genresStyles: { type: String, required: false },
   performanceExperience: { type: String, required: false },
   achievementsAwards: { type: String, required: false },

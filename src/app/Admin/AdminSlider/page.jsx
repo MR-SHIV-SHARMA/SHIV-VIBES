@@ -40,7 +40,7 @@ const AdminSlider = () => {
           className={`flex justify-center items-center py-4 ${isActive(
             "/Admin/Home"
           )}`}
-          onClick={() => handleSetActivePage("/Admin/Home")}
+          onClick={() => handleSetActivePage("/Admin")}
         >
           <FaHome className="mr-2 cursor-pointer" />
           <Link href="/Admin/Home">
