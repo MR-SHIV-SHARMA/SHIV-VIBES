@@ -7,12 +7,15 @@ export interface IMusicProduction extends Document {
   image: string;
 }
 
-const musicProductionSchema: Schema = new Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  status: { type: String, required: true },
-  image: { type: String, required: true },
-});
+const musicProductionSchema: Schema = new Schema(
+  {
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    status: { type: String, required: true },
+    image: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
 const MusicProduction =
   mongoose.models.MusicProduction ||

@@ -5,7 +5,7 @@ import { HeroParallax } from "./ui/hero-parallax";
 function HeroParallaxDemo() {
   return (
     <HeroParallax
-      products={products.map((product) => ({ ...product, link: "/courses" }))}
+      products={products.map((product) => ({ ...product, link: "/NavComponent/courses" }))}
     />
   );
 }

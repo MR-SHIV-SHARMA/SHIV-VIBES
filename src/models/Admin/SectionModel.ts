@@ -59,14 +59,17 @@ const ExamplesSchema = new Schema<IExamples>({
 });
 
 // Define the main schema
-const SectionSchema = new Schema<ISection>({
-  title: { type: String, required: true },
-  status: { type: String, required: true },
-  content: { type: ContentSchema },
-  image: { type: ImageSchema },
-  examples: { type: ExamplesSchema },
-  tips: { type: TipsSchema },
-});
+const SectionSchema = new Schema<ISection>(
+  {
+    title: { type: String, required: true },
+    status: { type: String, required: true },
+    content: { type: ContentSchema },
+    image: { type: ImageSchema },
+    examples: { type: ExamplesSchema },
+    tips: { type: TipsSchema },
+  },
+  { timestamps: true }
+);
 
 // Create and export the model
 const Section =
