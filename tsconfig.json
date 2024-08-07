@@ -32,6 +32,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types"
-, "src/app/NavComponent/Advanced_Composition/page.tsx", "src/models/users/profile_models.js", "src/app/Admin/All_Courses/page.jsx", "src/app/NavComponent/Songwriting/page.jsx", "src/app/profile/page.jsx"  ],
+, "src/app/NavComponent/Advanced_Composition/page.tsx", "src/models/users/profile_models.js", "src/app/Admin/All_Courses/page.jsx", "src/app/NavComponent/Songwriting/page.jsx", "src/app/profile/page.jsx", "src/utils/cloudinary.js", "src/multer.middleware.js", "src/verifyJWT.js", "src/errorHandling.middleware.js"  ],
   "exclude": ["node_modules"]
 }

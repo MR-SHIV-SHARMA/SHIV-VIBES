@@ -7,7 +7,6 @@ function MusicSchoolContactUs() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<string | null>(null); // To display success or error message
-  const [isDarkMode, setIsDarkMode] = useState(true); // To toggle between light and dark themes
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

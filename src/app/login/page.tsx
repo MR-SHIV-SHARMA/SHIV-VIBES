@@ -1,9 +1,8 @@
 "use client";
-
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -29,13 +28,18 @@ function LoginPage() {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
       console.log("Login success", response.data); // Log the entire response object
-      toast.success("Login success");
+      toast.success("Login success", { duration: 4000 });
 
-      // Ensure the response contains the userId property
-      const userId = response.data.userId;
+      // Ensure the response contains the userId and isAdmin property
+      const { userId, isAdmin } = response.data;
       if (userId) {
         localStorage.setItem("userId", userId);
-        console.log("User ID saved to localStorage:", userId);
+        localStorage.setItem("isAdmin", isAdmin); // Save admin status
+        console.log(
+          "User ID and admin status saved to localStorage:",
+          userId,
+          isAdmin
+        );
       } else {
         console.error("User ID not found in response:", response.data);
       }
@@ -48,7 +52,9 @@ function LoginPage() {
         error.response?.data?.error || "An error occurred"
       );
       if (error.response?.data?.error === "Email not verified") {
-        toast.error("Email not verified. Please verify your email.");
+        toast.error("Email not verified. Please verify your email.", {
+          duration: 4000,
+        });
         setErrorMessage("Email not verified. Please verify your email.");
       } else {
         toast.error(error.response?.data?.error || "An error occurred");
@@ -70,6 +76,17 @@ function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-transparent bg-gray-600">
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000, // Duration in milliseconds
+          style: {
+            fontSize: "20px", // Customize font size
+            color: "#333", // Text color
+            background: "#fff", // Background color
+          },
+        }}
+      />
       <div className="max-w-md w-full mx-auto bg-black rounded-none md:rounded-2xl p-4 md:p-8 shadow-input flex flex-col items-center justify-center md:bg-black">
         <h2 className="font-bold text-xl mt-4 text-neutral-800 dark:text-neutral-200">
           Welcome to SHIV-WEB

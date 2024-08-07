@@ -20,6 +20,7 @@ function SignupFormDemo() {
     email: "",
     password: "",
     username: "",
+    firstName: "",
     lastname: "",
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
@@ -75,12 +76,14 @@ function SignupFormDemo() {
         <form onSubmit={onSignup}>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
-              <Label htmlFor="Username">Username</Label>
+              <Label htmlFor="firstName">FirstName</Label>
               <Input
-                id="Username"
-                value={user.username}
-                onChange={(e) => setUser({ ...user, username: e.target.value })}
-                placeholder="Shiv"
+                id="firstName"
+                value={user.firstName}
+                onChange={(e) =>
+                  setUser({ ...user, firstName: e.target.value })
+                }
+                placeholder="firstName"
                 type="text"
               />
             </LabelInputContainer>
@@ -90,11 +93,21 @@ function SignupFormDemo() {
                 id="lastname"
                 value={user.lastname}
                 onChange={(e) => setUser({ ...user, lastname: e.target.value })}
-                placeholder="Sharma"
+                placeholder="lastname"
                 type="text"
               />
             </LabelInputContainer>
           </div>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="Username">Username</Label>
+            <Input
+              id="Username"
+              value={user.username}
+              onChange={(e) => setUser({ ...user, username: e.target.value })}
+              placeholder="Username"
+              type="text"
+            />
+          </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input

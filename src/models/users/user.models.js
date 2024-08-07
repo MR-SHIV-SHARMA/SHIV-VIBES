@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Please provide a username"],
       unique: true,
     },
+    firstName: {
+      type: String,
+      required: [true, "Please provide a firstName"],
+    },
     lastname: {
       type: String,
       required: [true, "Please provide a lastname"],
@@ -24,10 +28,23 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // avatar: {
+    //   type: String, // cloudinary url
+    //   required: true,
+    // },
+    // coverImage: {
+    //   type: String, // cloudinary url
+    // },
     isAdmin: {
       type: Boolean,
       default: false,
     },
+    watchHistory: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Video",
+      },
+    ],
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,
