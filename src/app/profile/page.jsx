@@ -93,6 +93,7 @@ const Profile = () => {
       await axios.post(`/api/users/profile`, profileWithUserId, {
         headers: { "Content-Type": "application/json" },
       });
+      window.location.reload();
       toast.success("Profile created successfully!");
       setButtonBgColor("bg-green-500");
       setIsProfileCreated(true);
