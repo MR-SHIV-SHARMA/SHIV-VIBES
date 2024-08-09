@@ -1,5 +1,3 @@
-// ./api/users/login.js
-
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/users/user.models";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,10 +9,15 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
-    const { email, password } = reqBody;
+    const { identifier, password } = reqBody;
     console.log(reqBody);
 
-    const user = await User.findOne({ email });
+    // Check if the identifier is an email or username
+    const query = identifier.includes("@")
+      ? { email: identifier }
+      : { username: identifier };
+
+    const user = await User.findOne(query);
     if (!user) {
       return NextResponse.json(
         { error: "User does not exist" },
@@ -45,6 +48,9 @@ export async function POST(request: NextRequest) {
         }
       );
     }
+
+    user.status = true;
+    await user.save();
 
     const tokenData = {
       id: user._id,

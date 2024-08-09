@@ -2,14 +2,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    username: { type: String, unique: true, required: true }, // Ensure unique constraint and required
+    firstname: {
       type: String,
-      required: [true, "Please provide a username"],
-      unique: true,
-    },
-    firstName: {
-      type: String,
-      required: [true, "Please provide a firstName"],
+      required: [true, "Please provide a lastname"],
     },
     lastname: {
       type: String,
@@ -28,23 +24,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // avatar: {
-    //   type: String, // cloudinary url
-    //   required: true,
-    // },
-    // coverImage: {
-    //   type: String, // cloudinary url
-    // },
     isAdmin: {
       type: Boolean,
       default: false,
     },
-    watchHistory: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Video",
-      },
-    ],
+    status: {
+      type: Boolean,
+      default: false,
+    },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,

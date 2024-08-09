@@ -20,7 +20,7 @@ function SignupFormDemo() {
     email: "",
     password: "",
     username: "",
-    firstName: "",
+    firstname: "",
     lastname: "",
   });
   const [buttonDisabled, setButtonDisabled] = React.useState(false);
@@ -76,38 +76,37 @@ function SignupFormDemo() {
         <form onSubmit={onSignup}>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
-              <Label htmlFor="firstName">FirstName</Label>
+              <Label htmlFor="firstname">Firstname</Label>
               <Input
-                id="firstName"
-                value={user.firstName}
-                onChange={(e) =>
-                  setUser({ ...user, firstName: e.target.value })
-                }
-                placeholder="firstName"
+                id="firstname"
+                value={user.firstname}
+                onChange={(e) => setUser({ ...user, firstname: e.target.value })}
+                placeholder="Shiv"
                 type="text"
               />
             </LabelInputContainer>
+           
             <LabelInputContainer>
               <Label htmlFor="lastname">Last name</Label>
               <Input
                 id="lastname"
                 value={user.lastname}
                 onChange={(e) => setUser({ ...user, lastname: e.target.value })}
-                placeholder="lastname"
+                placeholder="Sharma"
                 type="text"
               />
             </LabelInputContainer>
           </div>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="Username">Username</Label>
-            <Input
-              id="Username"
-              value={user.username}
-              onChange={(e) => setUser({ ...user, username: e.target.value })}
-              placeholder="Username"
-              type="text"
-            />
-          </LabelInputContainer>
+          <LabelInputContainer>
+              <Label htmlFor="Username">Username</Label>
+              <Input
+                id="Username"
+                value={user.username}
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
+                placeholder="Mr_Shiv_Sharma_1"
+                type="text"
+              />
+            </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input

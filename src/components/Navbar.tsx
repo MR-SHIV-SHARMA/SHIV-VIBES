@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -12,40 +12,20 @@ import {
   FaEnvelope,
   FaUser,
   FaSignOutAlt,
-  FaCog, // Admin icon
-  FaSignInAlt, // Login icon
+  FaUserShield,
+  FaSignInAlt,
 } from "react-icons/fa";
 import { Menu, MenuItem, HoveredLink } from "./ui/navbar-menu";
 
 function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false); // State to manage admin status
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        if (userId) {
-          setIsLoggedIn(true); // User is logged in
-          const response = await axios.get(
-            `/api/users/signup?userId=${userId}`
-          );
-          if (response.data.user) {
-            setIsAdmin(response.data.user.isAdmin); // Set admin status
-          }
-        } else {
-          setIsLoggedIn(false); // User is not logged in
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // Determine if dark mode is enabled
+  const isDarkMode = false;
 
   // List of paths where the navbar should be hidden
   const hiddenPaths = [
@@ -81,32 +61,45 @@ function Navbar({ className }: { className?: string }) {
     "/verifyemail",
   ];
 
-  if (hiddenPaths.includes(pathname)) {
-    return null; // Do not render the navbar
-  }
+  // Fetch user status on mount
+  useEffect(() => {
+    const fetchUserStatus = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const response = await axios.get(`/api/users/signup?userId=${userId}`);
+          setIsLoggedIn(response.data.user.status);
+          setIsAdmin(response.data.user.isAdmin);
+        } else {
+          setIsLoggedIn(false);
+          setIsAdmin(false);
+        }
+      } catch (error: any) {
+        console.error("Error fetching user status:", error.message);
+      }
+    };
+    fetchUserStatus();
+  }, []);
 
+  // Logout function
   const logout = async () => {
     try {
       await axios.post("/api/users/logout");
       localStorage.removeItem("userId");
-      localStorage.removeItem("isAdmin"); // Clear admin status on logout
-      setIsLoggedIn(false); // Update login status
+      setIsLoggedIn(false);
+      setIsAdmin(false);
       toast.success("Logout successful");
-  
-      // Redirect to the homepage
-      router.push("/");
-  
-      // Optionally use setTimeout to ensure redirection happens before reloading
-      setTimeout(() => {
-        window.location.reload();
-      }, 1); // Delay can be adjusted if needed
+      router.push("/login");
     } catch (error: any) {
       console.error("Logout error:", error.message);
       toast.error("Logout failed");
     }
   };
-  
-  
+
+  // Return null if pathname matches hiddenPaths
+  if (hiddenPaths.includes(pathname)) {
+    return null;
+  }
 
   return (
     <div
@@ -115,18 +108,7 @@ function Navbar({ className }: { className?: string }) {
         className
       )}
     >
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            fontSize: "20px",
-            color: "#333",
-            background: "#fff",
-          },
-        }}
-      />
-      <Menu setActive={setActive} isDarkMode={false}>
+      <Menu setActive={setActive} isDarkMode={isDarkMode}>
         <Link href="/">
           <MenuItem
             setActive={setActive}
@@ -183,7 +165,7 @@ function Navbar({ className }: { className?: string }) {
               setActive={setActive}
               active={active}
               item=""
-              icon={<FaCog />} // Admin icon
+              icon={<FaUserShield />}
               showOnlyIconOnSmallScreen={true}
             />
           </Link>
@@ -202,7 +184,7 @@ function Navbar({ className }: { className?: string }) {
               setActive={setActive}
               active={active}
               item=""
-              icon={<FaSignInAlt />} // Login icon
+              icon={<FaSignInAlt />}
               showOnlyIconOnSmallScreen={true}
             />
           </Link>

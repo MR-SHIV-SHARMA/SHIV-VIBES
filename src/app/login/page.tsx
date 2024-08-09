@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast, Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -12,13 +12,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 function LoginPage() {
   const router = useRouter();
   const [user, setUser] = useState({
-    email: "",
+    identifier: "", // Combined field for email or username
     password: "",
   });
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false); // New state for showing password
+  const [showPassword, setShowPassword] = useState(false); // State for showing password
 
   const onLogin = async (event: any) => {
     event.preventDefault();
@@ -28,46 +28,33 @@ function LoginPage() {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
       console.log("Login success", response.data); // Log the entire response object
-      toast.success("Login success", { duration: 4000 });
+      toast.success("Login success");
 
-      // Ensure the response contains the userId and isAdmin property
-      const { userId, isAdmin } = response.data;
+      // Ensure the response contains the userId property
+      const userId = response.data.userId;
       if (userId) {
         localStorage.setItem("userId", userId);
-        localStorage.setItem("isAdmin", isAdmin); // Save admin status
-        console.log(
-          "User ID and admin status saved to localStorage:",
-          userId,
-          isAdmin
-        );
+        console.log("User ID saved to localStorage:", userId);
       } else {
         console.error("User ID not found in response:", response.data);
       }
 
-      // Reload the page immediately after login
+      // Redirect or reload the page after login
       window.location.reload();
     } catch (error: any) {
       console.log(
         "Login failed",
         error.response?.data?.error || "An error occurred"
       );
-      if (error.response?.data?.error === "Email not verified") {
-        toast.error("Email not verified. Please verify your email.", {
-          duration: 4000,
-        });
-        setErrorMessage("Email not verified. Please verify your email.");
-      } else {
-        toast.error(error.response?.data?.error || "An error occurred");
-        setErrorMessage(error.response?.data?.error || "An error occurred");
-      }
+      toast.error(error.response?.data?.error || "An error occurred");
+      setErrorMessage(error.response?.data?.error || "An error occurred");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
-      console.log(user.email);
+    if (user.identifier.length > 0 && user.password.length > 0) {
       setButtonDisabled(false);
     } else {
       setButtonDisabled(true);
@@ -76,17 +63,6 @@ function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-transparent bg-gray-600">
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000, // Duration in milliseconds
-          style: {
-            fontSize: "20px", // Customize font size
-            color: "#333", // Text color
-            background: "#fff", // Background color
-          },
-        }}
-      />
       <div className="max-w-md w-full mx-auto bg-black rounded-none md:rounded-2xl p-4 md:p-8 shadow-input flex flex-col items-center justify-center md:bg-black">
         <h2 className="font-bold text-xl mt-4 text-neutral-800 dark:text-neutral-200">
           Welcome to SHIV-WEB
@@ -100,19 +76,18 @@ function LoginPage() {
 
         <form className="my-8" onSubmit={onLogin}>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="identifier">Email or Username</Label>
             <Input
-              id="email"
-              value={user.email}
-              onChange={(e) => setUser({ ...user, email: e.target.value })}
-              placeholder="Shiv@gmail.com"
-              type="email"
+              id="identifier"
+              value={user.identifier}
+              onChange={(e) => setUser({ ...user, identifier: e.target.value })}
+              placeholder="Email or Username"
+              type="text"
               className="dark:text-white"
             />
           </LabelInputContainer>
+
           <LabelInputContainer className="mb-4 relative">
-            {" "}
-            {/* Make the container relative for positioning */}
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
