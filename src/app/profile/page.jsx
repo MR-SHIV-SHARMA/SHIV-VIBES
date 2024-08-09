@@ -240,8 +240,6 @@ const Profile = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                       {[
                         { name: "profile", placeholder: "Profile Image URL" },
-                        { name: "firstName", placeholder: "First Name" },
-                        { name: "lastName", placeholder: "Last Name" },
                         { name: "birthday", placeholder: "Birthday" },
                         { name: "phone", placeholder: "Phone" },
                         { name: "city", placeholder: "City" },

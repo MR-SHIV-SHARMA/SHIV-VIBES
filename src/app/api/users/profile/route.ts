@@ -41,8 +41,6 @@ export async function POST(request: NextRequest) {
       userId,
       profile,
       birthday,
-      firstName,
-      lastName,
       phone,
       city,
       hobbies,
@@ -60,7 +58,7 @@ export async function POST(request: NextRequest) {
     // Check required fields
     if (!userId) {
       return NextResponse.json(
-        { success: false, error: "Missing required fields" },
+        { success: false, error: "userId is required" },
         { status: 400 }
       );
     }
@@ -76,10 +74,12 @@ export async function POST(request: NextRequest) {
     // Create a new profile with the provided data
     const newProfile = new Profile({
       userId: user._id,
+      username: user.username,
+      email: user.email,
+      firstName: user.firstname,
+      lastName: user.lastname,
       profile,
-      firstName,
       birthday,
-      lastName,
       phone,
       city,
       hobbies,
@@ -94,7 +94,18 @@ export async function POST(request: NextRequest) {
       bio,
     });
 
-    await newProfile.save(); // Save the new profile to the database
+    try {
+      await newProfile.save(); // Save the new profile to the database
+    } catch (error: any) {
+      if (error.code === 11000) {
+        // Duplicate key error code
+        return NextResponse.json(
+          { success: false, error: "Username or email already exists" },
+          { status: 400 }
+        );
+      }
+      throw error;
+    }
 
     // Cache the new profile in Redis
     await ensureRedisConnection(); // Ensure Redis is connected
